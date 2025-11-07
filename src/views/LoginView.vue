@@ -1,19 +1,17 @@
 <template>
   <div
-    class="flex min-h-screen w-full flex-col items-center justify-center bg-[#0b0b0b] text-white font-display p-4"
+    class="relative flex h-auto min-h-screen w-full flex-col items-center justify-center bg-background-dark dark group/design-root overflow-x-hidden p-4"
   >
     <div class="flex w-full max-w-sm flex-col items-center gap-8">
+      
       <!-- Logo -->
-      <!-- Logo -->
-        <div class="flex items-center justify-center">
-            <img 
-            src="/src/assets/logo-gc.png" 
-            alt="Gorila Crew Elite Logo" 
-            class="w-28 h-28 object-contain drop-shadow-lg"
-             />
-        </div>
-
-        <p class="uppercase tracking-[0.3em] text-[#9a8c58] text-xs mt-[-12px]">
+      <div class="flex flex-col items-center justify-center">
+        <img
+          :src="logo"
+          alt="Gorila Crew Elite Logo"
+          class="w-[110px] h-[110px] object-contain drop-shadow-[0_0_12px_#C7A64F] animate-fade-in"
+        />
+        <p class="uppercase tracking-[0.3em] text-[#C7A64F]/80 text-xs mt-[-6px]">
           crew elite
         </p>
       </div>
@@ -82,6 +80,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import logo from '@/assets/images/logo-gc.png'
 
 const router = useRouter()
 
@@ -100,4 +99,20 @@ function bypassLogin() {
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
+
+/* Animación sutil para entrada del logo */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1.2s ease-out both;
+}
 </style>
