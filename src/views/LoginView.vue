@@ -23,14 +23,15 @@
       <div class="flex flex-col">
         <label
           for="email"
-          class="text-sm font-semibold text-gray-200 pb-2 tracking-wide"
-          >Email</label
+          class="text-sm uppercase font-extrabold text-[#F5F5F5] pb-1 tracking-[0.08em] hover:text-[#C7A64F]/90 transition-colors"
         >
+          Email
+        </label>
         <input
           id="email"
           type="email"
           placeholder="Introduce tu email"
-          class="h-12 w-full rounded-md bg-[#141414] border border-[#2a2a2a] px-4 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#C7A64F]/80 focus:border-transparent transition"
+          class="h-13 w-full rounded-md bg-[#151515] border border-[#2a2a2a] px-4 text-[#FAFAFA] placeholder-[#C0C0C0]/70 focus:outline-none focus:ring-2 focus:ring-[#C7A64F]/80 focus:border-transparent transition font-semibold tracking-wide"
         />
       </div>
 
@@ -38,15 +39,16 @@
       <div class="flex flex-col">
         <label
           for="password"
-          class="text-sm font-semibold text-gray-200 pb-2 tracking-wide"
-          >Contraseña</label
+          class="text-sm uppercase font-extrabold text-[#F5F5F5] pb-1 tracking-[0.08em] hover:text-[#C7A64F]/90 transition-colors"
         >
+          Contraseña
+        </label>
         <div class="relative">
           <input
             id="password"
             type="password"
             placeholder="Introduce tu contraseña"
-            class="h-12 w-full rounded-md bg-[#141414] border border-[#2a2a2a] px-4 pr-12 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#C7A64F]/80 focus:border-transparent transition"
+            class="h-13 w-full rounded-md bg-[#151515] border border-[#2a2a2a] px-4 pr-12 text-[#FAFAFA] placeholder-[#C0C0C0]/70 focus:outline-none focus:ring-2 focus:ring-[#C7A64F]/80 focus:border-transparent transition font-semibold tracking-wide"
           />
           <span
             class="material-symbols-outlined absolute right-4 top-3 text-gray-500 cursor-pointer hover:text-gray-300 transition"
@@ -59,7 +61,7 @@
       <!-- BOTÓN LOGIN -->
       <button
         type="submit"
-        class="h-12 mt-2 rounded-md bg-[#C7A64F] text-black font-bold tracking-wide text-sm hover:bg-[#d4b55b] active:scale-[0.97] transition-all shadow-[0_0_20px_rgba(199,166,79,0.3)]"
+        class="h-12 mt-2 rounded-md bg-[#C7A64F] text-black font-extrabold tracking-wider text-sm hover:bg-[#d4b55b] active:scale-[0.97] transition-all shadow-[0_0_25px_rgba(199,166,79,0.35)]"
       >
         ENTRAR A LA GORILA CREW ELITE
       </button>
@@ -68,14 +70,14 @@
     <!-- BOTÓN BYPASS -->
     <button
       @click="bypassLogin"
-      class="h-12 w-full max-w-sm mt-4 rounded-md border border-[#C7A64F]/50 text-[#C7A64F] font-medium tracking-wide text-sm hover:bg-[#C7A64F]/10 active:scale-[0.97] transition-all"
+      class="h-12 w-full max-w-sm mt-4 rounded-md border border-[#C7A64F]/50 text-[#C7A64F] font-bold uppercase tracking-wider text-sm hover:bg-[#C7A64F]/10 active:scale-[0.97] transition-all"
     >
       Entrar sin iniciar sesión
     </button>
 
     <!-- FRASE -->
     <p
-      class="text-xs text-[#9b9b9b] text-center pt-8 italic tracking-wide leading-relaxed max-w-[280px]"
+      class="text-xs text-[#A5A5A5] text-center pt-8 italic tracking-wide leading-relaxed max-w-[280px]"
     >
       “El que domina su cuerpo, domina su mente.”
     </p>
@@ -101,7 +103,7 @@ function bypassLogin() {
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
 
 html,

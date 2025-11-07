@@ -1,0 +1,75 @@
+/* Importa TODO Tailwind en una sola línea (Tailwind 4+) */
+@import "tailwindcss";
+
+/* ------------------------------- */
+/* 🌑 Estilos globales opcionales  */
+/* ------------------------------- */
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: #0E0E0E;
+  color: #EAEAEA;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Campos de formulario */
+input,
+select,
+textarea {
+  background-color: #141414;
+  color: #F5F5F5;
+  border: 1px solid #2A2A2A;
+  border-radius: 0.375rem; /* rounded-md */
+  height: 3rem; /* h-12 */
+  padding: 0 1rem;
+  transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #C7A64F;
+}
+
+/* Labels */
+label {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 600;
+  color: #EAEAEA;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.025em;
+}
+
+/* Botones principales */
+button {
+  background-color: #C7A64F;
+  color: #000;
+  font-weight: 700;
+  border-radius: 0.375rem;
+  height: 3rem;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 0 15px rgba(199, 166, 79, 0.25);
+}
+
+button:hover {
+  background-color: #D4B55B;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* Botones secundarios */
+button.secondary {
+  border: 1px solid rgba(199, 166, 79, 0.5);
+  background: transparent;
+  color: #C7A64F;
+}
+
+button.secondary:hover {
+  background-color: rgba(199, 166, 79, 0.1);
+}
