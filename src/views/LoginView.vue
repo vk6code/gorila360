@@ -4,12 +4,15 @@
   >
     <div class="flex w-full max-w-sm flex-col items-center gap-8">
       <!-- Logo -->
-      <div class="flex flex-col items-center justify-center">
-        <h1
-          class="text-[100px] font-extrabold text-[#C7A64F] drop-shadow-[0_0_10px_rgba(199,166,79,0.2)]"
-        >
-          GC
-        </h1>
+      <!-- Logo -->
+        <div class="flex items-center justify-center">
+            <img 
+            src="/src/assets/logo-gc.png" 
+            alt="Gorila Crew Elite Logo" 
+            class="w-28 h-28 object-contain drop-shadow-lg"
+             />
+        </div>
+
         <p class="uppercase tracking-[0.3em] text-[#9a8c58] text-xs mt-[-12px]">
           crew elite
         </p>
