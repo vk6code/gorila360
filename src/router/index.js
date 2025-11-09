@@ -1,10 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
+import PlansView from '../views/PlansView.vue'
+import DietView from '../views/DietView.vue'
+import ProgressView from '../views/ProgressView.vue'
 
 const routes = [
   { path: '/', name: 'Login', component: LoginView },
   { path: '/dashboard', name: 'Dashboard', component: DashboardView },
+  {
+    path: '/plans',
+    name: 'plans',
+    component: PlansView
+  },
+  {
+    path: '/diet',
+    name: 'diet',
+    component: DietView
+  },
+  {
+    path: '/progress',
+    name: 'progress',
+    component: ProgressView
+  }
 ]
 
 const router = createRouter({
@@ -16,8 +34,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem('loggedIn')
   const guestMode = localStorage.getItem('guestMode')
-
-  if (to.name === 'Dashboard' && !loggedIn && !guestMode) {
+  const isProtected = to.name !== 'Login'
+  if (isProtected && !loggedIn && !guestMode) {
     next({ name: 'Login' })
   } else {
     next()
