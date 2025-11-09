@@ -2,7 +2,7 @@
   <div class="gorila-dashboard">
     <!-- TODO: This banner should be dynamic -->
     <!-- Daily Banner -->
-    <div class="bg-[#1A1A1A] border-b border-accent-primary/30 flex items-center justify-center gap-x-3 px-4 py-2 text-center text-sm">
+    <div class="flex items-start gap-4 rounded-xl border border-[#C7A46F] bg-[#C7A46F]/10 p-4 mx-4 mt-4">
       <span class="material-symbols-outlined text-lg text-accent-primary -ml-2">
         campaign
       </span>

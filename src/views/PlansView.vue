@@ -36,7 +36,7 @@
           </button>
         </div>
         <div class="mt-2 pb-4">
-          <button class="w-full rounded-lg border border-[#3A3A3A] bg-[#1C1C1C] py-3 text-center text-base font-semibold text-white">Revisar Rendimiento de la Semana Pasada</button>
+          <button @click="goToWeeklyPlanner" class="btn w-full">Revisar Rendimiento de la Semana Pasada</button>
         </div>
       </main>
     </div>
@@ -82,6 +82,10 @@ const plans = ref([
 
 function goToWorkout(day) {
   router.push({ name: 'workout-day', params: { day: day } });
+}
+
+function goToWeeklyPlanner() {
+  router.push({ name: 'weekly-planner' });
 }
 </script>
 

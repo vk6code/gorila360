@@ -7,6 +7,7 @@ import DietView from '../views/DietView.vue'
 import ProgressView from '../views/ProgressView.vue'
 import WorkoutDayView from '../views/WorkoutDayView.vue'
 import ViewExercise from '../views/ViewExercise.vue'
+import WeeklyPlannerView from '../views/WeeklyPlannerView.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -48,6 +49,11 @@ const routes = [
     path: '/exercise/view', // Puedes hacerlo dinámico: /exercise/:id
     name: 'view-exercise',
     component: ViewExercise
+  },
+  {
+    path: '/weekly-planner',
+    name: 'weekly-planner',
+    component: WeeklyPlannerView
   }
 ]
 

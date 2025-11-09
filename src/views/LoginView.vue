@@ -98,21 +98,3 @@ function bypassLogin() {
   router.push("/app/dashboard");
 }
 </script>
-
-<style>
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  background: #0e0e0e;
-}
-
-button {
-  font-family: "Montserrat", sans-serif;
-}
-</style>

@@ -13,8 +13,12 @@
           :key="index"
           @click="goTo(tab.name)"
           class="relative flex flex-1 flex-col items-center justify-center gap-1 pt-1 pb-2 transition-all duration-200 ease-in-out active:scale-95"
-          :class="$route.name === tab.name ? 'text-accent-primary' : 'text-text-secondary'"
+          :class="$route.name === tab.name ? 'text-accent-primary' : 'text-text-secondary/70'"
         >
+          <div
+            class="absolute top-0 h-0.5 w-8 rounded-full bg-accent-primary transition-all duration-300"
+            :class="$route.name === tab.name ? 'opacity-100' : 'opacity-0'"
+          ></div>
           <span class="material-symbols-outlined text-2xl">
             {{ tab.icon }}
           </span>
