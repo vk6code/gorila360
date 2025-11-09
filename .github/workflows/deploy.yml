@@ -24,15 +24,20 @@ jobs:
       - name: Build (Vite)
         run: npm run build
 
-      # ✅ Usa base64 para evitar errores de formato en SSH_KEY
+      # 👇 Usa el mismo método que ya te funcionaba
       - name: Prepare SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" | base64 -d > ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          if [ -n "${{ secrets.SSH_PORT }}" ]; then
+            PORT_OPT="-p ${{ secrets.SSH_PORT }}"
+          else
+            PORT_OPT=""
+          fi
+          ssh-keyscan $PORT_OPT ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      # ✅ Sube la build (dist/) a la release correspondiente
+      # 👇 Sube la build a Hetzner
       - name: Upload release (rsync)
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -44,7 +49,7 @@ jobs:
           rsync -az --delete -e "ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519" \
             dist/ ${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/releases/${RELEASE_DIR}/
 
-      # ✅ Activa la nueva release y recarga nginx
+      # 👇 Actualiza el symlink y recarga nginx
       - name: Activate release (symlink -> current)
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -56,7 +61,7 @@ jobs:
           ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519 ${SSH_USER}@${SSH_HOST} \
             "ln -sfn ${DEPLOY_PATH}/releases/${RELEASE_DIR} ${DEPLOY_PATH}/current && sudo systemctl reload nginx"
 
-      # ✅ Limpieza opcional de releases viejas (más de 14 días)
+      # 👇 (Opcional) Limpieza de releases viejas
       - name: Cleanup old releases
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -66,3 +71,9 @@ jobs:
         run: |
           ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519 ${SSH_USER}@${SSH_HOST} \
             "find ${DEPLOY_PATH}/releases -mindepth 1 -mtime +14 -exec rm -rf {} +"
+
+      # 👇 (Opcional) Verifica que la web responde 200 OK
+      - name: Check deployment
+        run: |
+          sleep 3
+          curl -I https://gorila360.duckdns.org | grep "200"
