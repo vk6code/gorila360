@@ -10,14 +10,7 @@ const routes = [
   {
     path: '/',
     name: 'login',
-    component: LoginView,
-    beforeEnter: (to, from, next) => {
-      if (localStorage.getItem('loggedIn') || localStorage.getItem('guestMode')) {
-        next('/app/dashboard')
-      } else {
-        next()
-      }
-    }
+    component: LoginView
   },
   {
     path: '/app',
