@@ -5,13 +5,10 @@
     <!-- LOGO -->
     <div class="flex flex-col items-center justify-center mb-8">
       <img
-        :src="logo"
-        alt="Gorila Crew Elite Logo"
-        class="w-[95px] h-[95px] object-contain drop-shadow-[0_0_12px_#C7A64F]"
+        :src="logo" 
+        alt="GC Natural Elite Team Logo"
+        class="w-[150px] h-[150px] object-contain drop-shadow-[0_0_12px_#C7A64F]"
       />
-      <p class="uppercase tracking-[0.3em] text-[#C7A64F] text-xs mt-[-6px]">
-        crew elite
-      </p>
     </div>
 
     <!-- FORM -->
