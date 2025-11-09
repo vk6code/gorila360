@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen flex-col bg-background-primary p-6 font-display text-text-primary">
+  <div class="flex flex-col p-6 font-display text-text-primary">
     <h1 class="text-heading-lg font-bold">
       Diet
     </h1>

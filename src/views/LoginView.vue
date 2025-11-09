@@ -90,12 +90,12 @@ const router = useRouter();
 function handleLogin(e) {
   e.preventDefault();
   localStorage.setItem("loggedIn", true);
-  router.push("/dashboard");
+  router.push("/app/dashboard");
 }
 
 function bypassLogin() {
   localStorage.setItem("guestMode", true);
-  router.push("/dashboard");
+  router.push("/app/dashboard");
 }
 </script>
 

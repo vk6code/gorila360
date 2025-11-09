@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex min-h-screen flex-col bg-background-primary text-text-primary font-display">
+  <div>
     <!-- TODO: This banner should be dynamic -->
     <!-- Daily Banner -->
     <div class="bg-accent-primary px-4 py-2 text-center text-sm font-semibold text-black">
@@ -35,22 +35,6 @@
         </h2>
       </div>
     </div>
-
-    <!-- Bottom Navigation -->
-    <nav class="sticky bottom-0 left-0 right-0 border-t border-[#35332c] bg-[#1A1A1A] px-4 pb-3 pt-2 flex justify-between">
-      <button
-        v-for="(tab, index) in tabs"
-        :key="index"
-        @click="goTo(tab.name)"
-        class="flex flex-1 flex-col items-center justify-end gap-1 transition-colors"
-        :class="$route.path.startsWith('/' + tab.name) ? 'text-accent-primary' : 'text-text-secondary'"
-      >
-        <span class="material-symbols-outlined flex h-8 items-center justify-center">
-          {{ tab.icon }}
-        </span>
-        <p class="text-xs font-medium leading-normal tracking-[0.015em]">{{ tab.label }}</p>
-      </button>
-    </nav>
   </div>
 </template>
 
@@ -70,14 +54,6 @@ const cards = [
   { title: 'View upcoming workouts', icon: 'calendar_month', action: 'workouts' },
 ]
 
-// Navigation tabs
-const tabs = [
-  { name: 'dashboard', label: 'Home', icon: 'home' },
-  { name: 'plans', label: 'Plans', icon: 'fitness_center' },
-  { name: 'diet', label: 'Diet', icon: 'restaurant' },
-  { name: 'progress', label: 'Progress', icon: 'bar_chart' },
-]
-
 const goToSettings = () => {
   // Navigate or open settings modal
   console.log('Settings clicked')
@@ -85,10 +61,6 @@ const goToSettings = () => {
 
 const handleCardClick = (action) => {
   console.log('Card clicked:', action)
-}
-
-const goTo = (routeName) => {
-  router.push(`/${routeName}`);
 }
 </script>
 

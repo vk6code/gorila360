@@ -4,24 +4,48 @@ import DashboardView from '../views/DashboardView.vue'
 import PlansView from '../views/PlansView.vue'
 import DietView from '../views/DietView.vue'
 import ProgressView from '../views/ProgressView.vue'
+import AppLayout from '../layouts/AppLayout.vue'
 
 const routes = [
-  { path: '/', name: 'Login', component: LoginView },
-  { path: '/dashboard', name: 'Dashboard', component: DashboardView },
   {
-    path: '/plans',
-    name: 'plans',
-    component: PlansView
+    path: '/',
+    name: 'login',
+    component: LoginView,
+    beforeEnter: (to, from, next) => {
+      if (localStorage.getItem('loggedIn') || localStorage.getItem('guestMode')) {
+        next('/app/dashboard')
+      } else {
+        next()
+      }
+    }
   },
   {
-    path: '/diet',
-    name: 'diet',
-    component: DietView
-  },
-  {
-    path: '/progress',
-    name: 'progress',
-    component: ProgressView
+    path: '/app',
+    component: AppLayout,
+    meta: { requiresAuth: true },
+    redirect: '/app/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: DashboardView
+      },
+      {
+        path: 'plans',
+        name: 'plans',
+        component: PlansView
+      },
+      {
+        path: 'diet',
+        name: 'diet',
+        component: DietView
+      },
+      {
+        path: 'progress',
+        name: 'progress',
+        component: ProgressView
+      }
+    ]
   }
 ]
 
@@ -30,13 +54,16 @@ const router = createRouter({
   routes,
 })
 
-// Protección simple: evita entrar al dashboard sin login o modo invitado
+// Protección de rutas:
+// 1. Si el usuario no está logueado, no puede acceder a '/app/*' y es redirigido a '/login'.
+// 2. Si el usuario está logueado y va a '/', es redirigido a '/app/dashboard'.
 router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem('loggedIn')
   const guestMode = localStorage.getItem('guestMode')
-  const isProtected = to.name !== 'Login'
-  if (isProtected && !loggedIn && !guestMode) {
-    next({ name: 'Login' })
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (requiresAuth && !loggedIn && !guestMode) {
+    next({ name: 'login' })
   } else {
     next()
   }
