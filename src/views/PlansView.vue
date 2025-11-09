@@ -6,7 +6,7 @@
       <header class="flex items-center justify-between pb-4">
         <span class="material-symbols-outlined text-3xl opacity-0">menu</span>
         <h1 class="text-xl font-bold leading-tight tracking-[-0.015em]">
-          Selecciona Tu Protocolo
+           Mesociclo
         </h1>
         <div class="w-8"></div>
       </header>
