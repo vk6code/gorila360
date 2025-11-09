@@ -1,0 +1,54 @@
+name: Deploy preprod to Hetzner
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build (Vite)
+        run: npm run build
+
+      - name: Prepare SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Upload release (rsync)
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          RELEASE_DIR: ${{ github.sha }}
+        run: |
+          rsync -az --delete -e "ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519" \
+            dist/ ${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/releases/${RELEASE_DIR}/
+
+      - name: Activate release (symlink -> current)
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          RELEASE_DIR: ${{ github.sha }}
+        run: |
+          ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519 ${SSH_USER}@${SSH_HOST} \
+            "ln -sfn ${DEPLOY_PATH}/releases/${RELEASE_DIR} ${DEPLOY_PATH}/current && sudo systemctl reload nginx"
