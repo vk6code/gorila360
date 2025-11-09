@@ -1,22 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
+import AppLayout from '../layouts/AppLayout.vue'
 import DashboardView from '../views/DashboardView.vue'
 import PlansView from '../views/PlansView.vue'
 import DietView from '../views/DietView.vue'
 import ProgressView from '../views/ProgressView.vue'
-import AppLayout from '../layouts/AppLayout.vue'
+import WorkoutDayView from '../views/WorkoutDayView.vue'
+import ViewExercise from '../views/ViewExercise.vue'
 
 const routes = [
+  { path: '/', name: 'login', component: LoginView },
   {
-    path: '/',
-    name: 'login',
-    component: LoginView
-  },
-  {
+    // Layout principal que contiene la barra de navegación
     path: '/app',
     component: AppLayout,
-    meta: { requiresAuth: true },
-    redirect: '/app/dashboard',
+    redirect: '/app/dashboard', // Redirige a dashboard por defecto
     children: [
       {
         path: 'dashboard',
@@ -26,7 +24,7 @@ const routes = [
       {
         path: 'plans',
         name: 'plans',
-        component: PlansView
+        component: PlansView,
       },
       {
         path: 'diet',
@@ -39,6 +37,17 @@ const routes = [
         component: ProgressView
       }
     ]
+  },
+  {
+    path: '/workout/:day',
+    name: 'workout-day',
+    component: WorkoutDayView,
+    props: true
+  },
+  {
+    path: '/exercise/view', // Puedes hacerlo dinámico: /exercise/:id
+    name: 'view-exercise',
+    component: ViewExercise
   }
 ]
 
@@ -47,15 +56,12 @@ const router = createRouter({
   routes,
 })
 
-// Protección de rutas:
-// 1. Si el usuario no está logueado, no puede acceder a '/app/*' y es redirigido a '/login'.
-// 2. Si el usuario está logueado y va a '/', es redirigido a '/app/dashboard'.
+// Protección simple: evita entrar al dashboard sin login o modo invitado
 router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem('loggedIn')
   const guestMode = localStorage.getItem('guestMode')
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-
-  if (requiresAuth && !loggedIn && !guestMode) {
+  const isProtected = to.name !== 'login'
+  if (isProtected && !loggedIn && !guestMode) {
     next({ name: 'login' })
   } else {
     next()

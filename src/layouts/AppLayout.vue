@@ -35,10 +35,10 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const tabs = [
-  { name: 'dashboard', label: 'Home', icon: 'home' },
-  { name: 'plans', label: 'Plans', icon: 'fitness_center' },
-  { name: 'diet', label: 'Diet', icon: 'restaurant' },
-  { name: 'progress', label: 'Progress', icon: 'bar_chart' },
+  { name: 'dashboard', label: 'Inicio', icon: 'home' },
+  { name: 'plans', label: 'Planes', icon: 'fitness_center' },
+  { name: 'diet', label: 'Dieta', icon: 'restaurant' },
+  { name: 'progress', label: 'Progreso', icon: 'bar_chart' },
 ];
 
 const goTo = (routeName) => {

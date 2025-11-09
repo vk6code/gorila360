@@ -2,14 +2,17 @@
   <div>
     <!-- TODO: This banner should be dynamic -->
     <!-- Daily Banner -->
-    <div class="bg-accent-primary px-4 py-2 text-center text-sm font-semibold text-black">
-      <p>Today is chest day 💪</p>
+    <div class="bg-[#1A1A1A] border-b border-accent-primary/30 flex items-center justify-center gap-x-3 px-4 py-2 text-center text-sm">
+      <span class="material-symbols-outlined text-lg text-accent-primary -ml-2">
+        campaign
+      </span>
+      <p>Hoy es día de pecho 💪</p>
     </div>
 
     <!-- Header -->
     <div class="flex items-start justify-between p-6 pb-4">
       <h1 class="text-3xl font-bold leading-tight text-text-primary">
-        Welcome, {{ athleteName }}
+        Bienvenido, {{ athleteName }}
       </h1>
       <button
         class="flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-[#EAEAEA]"
@@ -45,13 +48,13 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // Example data
-const athleteName = ref('Athlete')
+const athleteName = ref('Gorila')
 
 // Dashboard action cards
 const cards = [
-  { title: 'Check your subscription', icon: 'credit_card', action: 'subscription' },
-  { title: 'Contact your coach', icon: 'chat', action: 'contact' },
-  { title: 'View upcoming workouts', icon: 'calendar_month', action: 'workouts' },
+  { title: 'Ver tu suscripción', icon: 'credit_card', action: 'subscription' },
+  { title: 'Contactar al entrenador', icon: 'chat', action: 'contact' },
+  { title: 'Ver próximos entrenamientos', icon: 'calendar_month', action: 'workouts' },
 ]
 
 const goToSettings = () => {
