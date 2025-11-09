@@ -7,7 +7,7 @@
       <img
         :src="logo" 
         alt="GC Natural Elite Team Logo"
-        class="w-[150px] h-[150px] object-contain drop-shadow-[0_0_12px_#C7A64F]"
+        class="w-[45%] max-w-[170px] h-auto object-contain drop-shadow-[0_0_12px_#C7A64F]"
       />
     </div>
 
