@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="gorila-dashboard">
     <!-- TODO: This banner should be dynamic -->
     <!-- Daily Banner -->
     <div class="bg-[#1A1A1A] border-b border-accent-primary/30 flex items-center justify-center gap-x-3 px-4 py-2 text-center text-sm">
@@ -68,10 +68,10 @@ const handleCardClick = (action) => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
-
-.font-display {
+.gorila-dashboard {
+  /* Forzamos el tema oscuro para aislarlo de estilos globales */
+  background-color: #0E0E0E !important;
+  color: #EAEAEA !important;
   font-family: 'Inter', sans-serif;
 }
 </style>

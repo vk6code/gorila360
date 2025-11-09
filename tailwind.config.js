@@ -52,6 +52,12 @@ export default {
       transitionTimingFunction: {
         'standard': 'ease-in-out',
       },
+      transitionProperty: {
+        'transform': 'transform',
+        'colors': 'background-color, border-color, color, fill, stroke',
+        'opacity': 'opacity',
+        'shadow': 'box-shadow',
+      },
     },
   },
   plugins: [],
