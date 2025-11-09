@@ -13,7 +13,7 @@
 
     <!-- FORM -->
     <form
-      @submit="handleLogin"
+      @submit.prevent="handleLogin"
       class="flex flex-col w-full max-w-sm gap-6 text-white"
     >
       <!-- EMAIL -->
@@ -26,6 +26,7 @@
         </label>
         <input
           id="email"
+          v-model="email"
           type="email"
           placeholder="Introduce tu email"
           class="h-13 w-full rounded-md bg-[#151515] border border-[#2a2a2a] px-4 text-[#FAFAFA] placeholder-[#C0C0C0]/70 focus:outline-none focus:ring-2 focus:ring-[#C7A64F]/80 focus:border-transparent transition font-semibold tracking-wide"
@@ -43,6 +44,7 @@
         <div class="relative">
           <input
             id="password"
+            v-model="password"
             type="password"
             placeholder="Introduce tu contraseña"
             class="h-13 w-full rounded-md bg-[#151515] border border-[#2a2a2a] px-4 pr-12 text-[#FAFAFA] placeholder-[#C0C0C0]/70 focus:outline-none focus:ring-2 focus:ring-[#C7A64F]/80 focus:border-transparent transition font-semibold tracking-wide"
@@ -82,15 +84,50 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useMutation } from "@vue/apollo-composable";
+import gql from "graphql-tag";
 import logo from "@/assets/images/logo-gc.png";
 
 const router = useRouter();
 
-function handleLogin(e) {
-  e.preventDefault();
-  localStorage.setItem("loggedIn", true);
+// --- 1. Referencias para los campos del formulario ---
+const email = ref("");
+const password = ref("");
+
+// --- 2. Definición de la mutación de GraphQL para el login ---
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    # El nombre de la mutación 'tokenAuth' puede variar según tu backend
+    tokenAuth(email: $email, password: $password) {
+      token
+      user {
+        name
+      }
+    }
+  }
+`;
+
+// --- 3. Hook para ejecutar la mutación ---
+const { mutate: loginUser, loading, error, onDone } = useMutation(LOGIN_MUTATION);
+
+// --- 4. Callback que se ejecuta si el login es exitoso ---
+onDone(result => {
+  const token = result.data.tokenAuth.token;
+  const userName = result.data.tokenAuth.user.name;
+
+  localStorage.setItem("authToken", token); // Guardamos el token para futuras peticiones
+  localStorage.setItem("userName", userName); // Guardamos el nombre del usuario
+  localStorage.setItem("loggedIn", true); // Mantenemos tu flag de sesión
   router.push("/app/dashboard");
+});
+
+function handleLogin() {
+  loginUser({
+    email: email.value,
+    password: password.value,
+  });
 }
 
 function bypassLogin() {

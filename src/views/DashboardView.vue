@@ -12,7 +12,7 @@
     <!-- Header -->
     <div class="flex items-start justify-between p-6 pb-4">
       <h1 class="text-3xl font-bold leading-tight text-text-primary">
-        Bienvenido, {{ athleteName }}
+        Bienvenido, {{ userName }} 🦍
       </h1>
       <button
         class="flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-[#EAEAEA]"
@@ -42,13 +42,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-// Example data
-const athleteName = ref('Gorila')
+const userName = ref('Gorila'); // Valor por defecto
+
+onMounted(() => {
+  userName.value = localStorage.getItem('userName') || 'Gorila';
+});
 
 // Dashboard action cards
 const cards = [
