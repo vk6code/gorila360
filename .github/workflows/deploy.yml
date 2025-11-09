@@ -18,19 +18,21 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Install deps
+      - name: Install dependencies
         run: npm ci
 
       - name: Build (Vite)
         run: npm run build
 
+      # ✅ Usa base64 para evitar errores de formato en SSH_KEY
       - name: Prepare SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KEY }}" | base64 -d > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+      # ✅ Sube la build (dist/) a la release correspondiente
       - name: Upload release (rsync)
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -42,6 +44,7 @@ jobs:
           rsync -az --delete -e "ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519" \
             dist/ ${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/releases/${RELEASE_DIR}/
 
+      # ✅ Activa la nueva release y recarga nginx
       - name: Activate release (symlink -> current)
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -52,3 +55,14 @@ jobs:
         run: |
           ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519 ${SSH_USER}@${SSH_HOST} \
             "ln -sfn ${DEPLOY_PATH}/releases/${RELEASE_DIR} ${DEPLOY_PATH}/current && sudo systemctl reload nginx"
+
+      # ✅ Limpieza opcional de releases viejas (más de 14 días)
+      - name: Cleanup old releases
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519 ${SSH_USER}@${SSH_HOST} \
+            "find ${DEPLOY_PATH}/releases -mindepth 1 -mtime +14 -exec rm -rf {} +"
