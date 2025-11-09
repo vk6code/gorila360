@@ -58,7 +58,7 @@
       <!-- BOTÓN LOGIN -->
       <button
         type="submit"
-        class="h-12 mt-2 rounded-md bg-[#C7A64F] text-black font-extrabold tracking-wider text-sm hover:bg-[#d4b55b] active:scale-[0.97] transition-all shadow-[0_0_25px_rgba(199,166,79,0.35)]"
+        class="btn h-12 mt-2 rounded-md text-black font-extrabold tracking-wider text-sm active:scale-[0.97] transition-all"
       >
         ENTRAR A LA GORILA CREW ELITE
       </button>

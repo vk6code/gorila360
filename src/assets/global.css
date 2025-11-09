@@ -44,7 +44,8 @@ label {
 }
 
 /* Botones principales */
-button {
+button.btn,
+.btn {
   background-color: #C7A64F;
   color: #000;
   font-weight: 700;
@@ -55,11 +56,13 @@ button {
   box-shadow: 0 0 15px rgba(199, 166, 79, 0.25);
 }
 
-button:hover {
+button.btn:hover,
+.btn:hover {
   background-color: #D4B55B;
 }
 
-button:active {
+button.btn:active,
+.btn:active {
   transform: scale(0.97);
 }
 

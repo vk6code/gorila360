@@ -1,13 +1,13 @@
 <template>
   <div class="relative flex h-screen flex-col overflow-hidden bg-background-primary font-display text-text-primary">
     <!-- Contenido de la página (Dashboard, Plans, etc.) que podrá hacer scroll -->
-    <div class="flex flex-1 flex-col overflow-y-auto pb-20">
+    <div class="flex-1 overflow-y-auto">
       <router-view />
     </div>
 
     <!-- Barra de Navegación Fija Abajo -->
-    <nav class="sticky bottom-0 left-0 right-0 border-t border-[#35332c] bg-[#1A1A1A] px-4 pb-3 pt-2 flex justify-between">
-      <div class="flex justify-between">
+    <nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around border-t border-[#35332c] bg-[#1A1A1A] px-2 py-2">
+      <div class="flex w-full justify-between">
         <button
           v-for="(tab, index) in tabs"
           :key="index"
