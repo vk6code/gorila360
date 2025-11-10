@@ -72,7 +72,7 @@ jobs:
           ssh -p ${SSH_PORT} -i ~/.ssh/id_ed25519 ${SSH_USER}@${SSH_HOST} \
             "find ${DEPLOY_PATH}/releases -mindepth 1 -mtime +14 -exec rm -rf {} +"
 
-      # 👇 (Opcional) Verifica que la web responde 200 OK
+      # 👇 (Opcional) Verifica que la web responde 200 OK Test deploy
       - name: Check deployment
         run: |
           sleep 3
