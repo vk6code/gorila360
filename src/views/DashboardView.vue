@@ -6,7 +6,7 @@
       <span class="material-symbols-outlined text-lg text-accent-primary -ml-2">
         campaign
       </span>
-      <p>Hoy es día de pecho 💪</p>
+      <p>Hoy es día de pecho 💪 (está hecho)</p>
     </div>
 
     <!-- Header -->
