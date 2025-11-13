@@ -11,6 +11,50 @@
       </h1>
     </div>
 
+    <div class="w-96 bg-neutral-900 rounded-2xl p-4 space-y-3">
+    <!-- Barbell Squat -->
+    <div class="flex items-center justify-between" @click="goToExercise">
+      <div class="flex items-center space-x-3">
+        <input type="radio" name="press" value="press" class="hidden peer" checked> <!-- Poner el checked si está checkeado-->
+        <div class="w-5 h-5 rounded-full border-2 border-yellow-500 peer-checked:bg-yellow-500"></div>
+        <span class="text-gray-500 peer-checked:text-white">Press Banca</span>
+        <span class="text-green-500 text-lg">✔</span>
+      </div>
+      <span class="text-gray-400 text-lg">›</span>
+    </div>
+
+    <!-- Leg Press -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <input type="radio" name="jalon" value="jalon" class="hidden peer" checked> <!-- Poner el checked si está checkeado-->
+        <div class="w-5 h-5 rounded-full border-2 border-yellow-500 peer-checked:bg-yellow-500"></div>
+        <span class="text-gray-500 peer-checked:text-white">Jalón Pecho</span>
+        <span class="text-green-500 text-lg">✔</span>
+      </div>
+      <span class="text-gray-400 text-lg">›</span>
+    </div>
+
+    <!-- Romanian Deadlift -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <input type="radio" name="rko" value="rko" class="hidden peer"> <!-- Poner el checked si está checkeado-->
+        <div class="w-5 h-5 rounded-full border-2 border-yellow-500 peer-checked:bg-yellow-500"></div>
+        <span class="text-gray-500 peer-checked:text-white">RKO</span>
+      </div>
+      <span class="text-gray-400 text-lg">›</span>
+    </div>
+
+    <!-- Leg Extension -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <input type="radio" name="mancuernas" value="mancuernas" class="hidden peer"> <!-- Poner el checked si está checkeado-->
+        <div class="w-5 h-5 rounded-full border-2 border-yellow-500 peer-checked:bg-yellow-500"></div>
+        <span class="text-gray-500 peer-checked:text-white">Mancuernas libre</span>
+      </div>
+      <span class="text-gray-400 text-lg">›</span>
+    </div>
+  </div>
+
     <div class="space-y-6">
       <div v-for="exercise in exercises" :key="exercise.name" class="bg-[#1A1A1A] p-5 rounded-xl">
         <h2 class="text-heading-md font-semibold text-accent-primary">{{ exercise.name }}</h2>
@@ -36,6 +80,10 @@ const router = useRouter();
 
 const goBack = () => {
   router.push({ name: 'plans' });
+};
+
+const goToExercise = () => {
+  router.push('/exercise/view/1');
 };
 
 const workoutData = {
