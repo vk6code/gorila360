@@ -46,7 +46,7 @@ const routes = [
     props: true
   },
   {
-    path: '/exercise/view', // Puedes hacerlo dinámico: /exercise/:id
+    path: '/exercise/view/:id', // Puedes hacerlo dinámico: /exercise/:id
     name: 'view-exercise',
     component: ViewExercise
   },
