@@ -47,7 +47,7 @@
       />
     </p>
   </div>
-  <div class="space-y-3">
+  <div class="space-y-3 pb-64">
 
     <div class="bg-[#111] rounded-2xl px-5 py-4 shadow-inner">
       <p class="text-gray-400 text-sm">Peso actual</p>
@@ -86,7 +86,10 @@ const series = ref([
 const chartOptions = ref({
   chart: {
     background: "#0d0d0d",
-    toolbar: { show: false }
+    toolbar: { show: false },
+    zoom: {
+      enabled: false
+    }
   },
   stroke: {
     curve: "smooth",
@@ -115,8 +118,21 @@ const chartOptions = ref({
     show: false
   },
   tooltip: {
-    enabled: true
+  custom: function({ series, seriesIndex, dataPointIndex, w }) {
+    const value = series[seriesIndex][dataPointIndex];
+    return `
+      <div style="
+        background:#1b1b1b;
+        padding:8px 12px;
+        border-radius:10px;
+        color:white;
+        font-size:14px;
+      ">
+        ${value} lbs
+      </div>
+    `;
   }
+}
 });
 </script>
 
