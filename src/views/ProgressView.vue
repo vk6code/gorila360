@@ -128,7 +128,7 @@ const chartOptions = ref({
         color:white;
         font-size:14px;
       ">
-        ${value} lbs
+        ${value} Kgs
       </div>
     `;
   }
