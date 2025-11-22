@@ -34,3 +34,10 @@ coverage
 
 # Vitest
 __screenshots__/
+
+# Documentation & Guides (keep local only)
+BACKEND_AUTH_GUIDE.md
+DEPLOYMENT.md
+FRONTEND_CONTEXT.md
+diagnose-graphql.sh
+*.guide.md
