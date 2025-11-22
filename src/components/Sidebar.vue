@@ -30,7 +30,7 @@
             class="flex items-center p-3 rounded-xl text-gray-700 hover:bg-gray-100 transition group"
           >
             <UsersIcon class="w-5 h-5 text-gray-500 group-hover:text-gray-700" />
-            <span class="ml-3">Usuarios</span>
+            <span class="ml-3">Alumnos</span>
           </RouterLink>
         </li>
 
