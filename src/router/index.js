@@ -101,12 +101,13 @@ const router = createRouter({
   routes,
 })
 
-// Protección simple: evita entrar al dashboard sin login o modo invitado
+// Protección de rutas: verifica autenticación
 router.beforeEach((to, from, next) => {
-  const loggedIn = localStorage.getItem('loggedIn')
+  const token = localStorage.getItem('auth_token')
   const guestMode = localStorage.getItem('guestMode')
   const isProtected = to.name !== 'login'
-  if (isProtected && !loggedIn && !guestMode) {
+
+  if (isProtected && !token && !guestMode) {
     next({ name: 'login' })
   } else {
     next()
