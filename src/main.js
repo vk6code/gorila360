@@ -8,11 +8,22 @@ import router from './router'
 
 const httpLink = createHttpLink({
   uri: '/graphql',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  fetchOptions: {
+    method: 'POST',
+  },
 })
 
 const apolloClient = new ApolloClient({
   link: httpLink,
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'network-only',
+    },
+  },
 })
 
 const app = createApp({
