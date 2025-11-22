@@ -7,7 +7,7 @@ import './assets/global.css'
 import router from './router'
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:8000/graphql',
+  uri: import.meta.env.VITE_GRAPHQL_URI || 'http://localhost:8000/graphql',
 })
 
 const apolloClient = new ApolloClient({
