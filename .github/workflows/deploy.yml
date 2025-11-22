@@ -76,4 +76,4 @@ jobs:
       - name: Check deployment
         run: |
           sleep 3
-          curl -I https://gorila360.duckdns.org | grep "200"
+          curl -I https://gorila360.es | grep "200"
