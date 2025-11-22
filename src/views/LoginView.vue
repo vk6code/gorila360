@@ -81,7 +81,7 @@
       <!-- Botón Google -->
       <!-- Botón Google -->
       <a
-        href="/auth/google"
+        href="https://gorila360.es/auth/google"
         class="w-14 h-14 rounded-lg bg-[#151515] hover:bg-[#1a1a1a] border border-[#2a2a2a] flex items-center justify-center active:scale-95 transition-all shadow-md group"
         title="Continuar con Google"
       >

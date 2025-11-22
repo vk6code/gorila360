@@ -1,18 +1,16 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { useAuth } from '@/stores/auth';
 import {
   ChevronLeftIcon,
   PlayIcon
 } from '@heroicons/vue/24/solid';
 
-const router = useRouter();
 const { logout } = useAuth();
 
 const handleLogout = () => {
   logout();
-  router.push('/');
+  window.location.href = 'https://gorila360.es';
 };
 
 // Mocking the GraphQL data for the MVP build
