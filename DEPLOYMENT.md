@@ -7,58 +7,56 @@ Hemos implementado un **proxy inverso** para que el frontend use URLs relativas 
 ### ✅ Cambios Realizados
 
 1. **Frontend (`src/main.js`)**: Ahora usa `uri: '/graphql'` en lugar de la URL completa
-2. **Vite Config**: Añadido proxy para desarrollo local
-3. **Nginx Config**: Configuración para producción con proxy inverso
+2. **Vite Config**: Añadido proxy para desarrollo local (`/graphql` → `http://localhost:8000`)
+3. **Nginx**: Ya configurado en el servidor con proxy inverso para `/graphql`
 
 ---
 
-## 🔧 Configuración en Producción
+## 🚀 Despliegue en Producción (gorila360.es)
 
-### Paso 1: Construir el Frontend
+### Paso 1: Conectar al Servidor
 
 ```bash
-# En tu máquina local
-npm run build
-
-# Esto genera la carpeta dist/ con los archivos estáticos
+ssh usuario@gorila360.es  # o la IP de tu servidor Hetzner
 ```
 
-### Paso 2: Subir Archivos al Servidor
+### Paso 2: Actualizar el Código
 
 ```bash
-# Opción A: Usando rsync
-rsync -avz --delete dist/ usuario@tu-servidor:/var/www/gorila360/dist/
-
-# Opción B: Usando SCP
-scp -r dist/* usuario@tu-servidor:/var/www/gorila360/dist/
-
-# Opción C: Usando Git (recomendado)
-# En el servidor:
+# Ir al directorio del proyecto
 cd /var/www/gorila360
+
+# Hacer pull de los cambios
 git pull
+
+# Instalar dependencias (si hay nuevas)
 npm install
-npm run build
 ```
 
-### Paso 3: Configurar Nginx en el Servidor
+### Paso 3: Construir el Frontend
 
 ```bash
-# Conectar al servidor
-ssh usuario@tu-servidor
+# Construir con las nuevas URLs relativas
+npm run build
 
-# Copiar la configuración de Nginx
-sudo cp /var/www/gorila360/nginx.conf /etc/nginx/sites-available/gorila360
+# Actualizar el symlink 'current' (ajusta según tu setup)
+rm -rf current
+ln -s dist current
 
-# Crear enlace simbólico
-sudo ln -sf /etc/nginx/sites-available/gorila360 /etc/nginx/sites-enabled/
+# O si copias directamente:
+# cp -r dist/* current/
+```
 
-# Eliminar configuración por defecto (si existe)
-sudo rm -f /etc/nginx/sites-enabled/default
+### Paso 4: Verificar Nginx
 
-# Verificar la configuración
+```bash
+# La configuración de Nginx ya está correcta en:
+# /etc/nginx/sites-available/gorila360.conf
+
+# Verificar que esté OK
 sudo nginx -t
 
-# Si todo está OK, recargar Nginx
+# Recargar Nginx (opcional)
 sudo systemctl reload nginx
 ```
 
