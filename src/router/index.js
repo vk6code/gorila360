@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import AppLayout from '../layouts/AppLayout.vue'
+import AdminLayout from '../layouts/AdminLayout.vue'
 import DashboardView from '../views/DashboardView.vue'
 import PlansView from '../views/PlansView.vue'
 import DietView from '../views/DietView.vue'
@@ -8,6 +9,9 @@ import ProgressView from '../views/ProgressView.vue'
 import WorkoutDayView from '../views/WorkoutDayView.vue'
 import ViewExercise from '../views/ViewExercise.vue'
 import WeeklyPlannerView from '../views/WeeklyPlannerView.vue'
+import AdminDashboardView from '../views/AdminDashboard.vue'
+import AdminUsersView from '../views/AdminUsers.vue'
+import AdminPlansView from '../views/AdminPlans.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -37,6 +41,34 @@ const routes = [
         name: 'progress',
         component: ProgressView
       }
+    ]
+  },
+  {
+    // Layout principal que contiene la barra de navegación
+    path: '/admin',
+    component: AdminLayout,
+    redirect: '/admin/dashboard', // Redirige a dashboard por defecto
+    children: [
+      {
+        path: 'dashboard',
+        name: 'admin-dashboard',
+        component: AdminDashboardView
+      },
+      {
+        path: 'usuarios',
+        name: 'admin-usuarios',
+        component: AdminUsersView,
+      },
+      {
+        path: 'planes',
+        name: 'admin-planes',
+        component: AdminPlansView
+      },
+      // {
+      //   path: 'progress',
+      //   name: 'progress',
+      //   component: ProgressView
+      // }
     ]
   },
   {

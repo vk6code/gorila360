@@ -1,0 +1,3 @@
+<template>
+  <h2 class="text-3xl font-bold">Planes</h2>
+</template>
