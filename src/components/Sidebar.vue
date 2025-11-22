@@ -44,6 +44,48 @@
           </RouterLink>
         </li>
 
+        <li>
+          <button
+            @click="openDropdown = !openDropdown"
+            class="flex w-full items-center justify-between p-3 rounded-xl text-gray-700 hover:bg-gray-100 transition"
+          >
+            <div class="flex items-center">
+              <ClipboardDocumentIcon  class="w-5 h-5 text-gray-500 group-hover:text-gray-700" />
+              <span class="ml-3">Rutinas</span>
+            </div>      
+            
+            <!-- Flecha -->
+            <ChevronDownIcon
+              class="w-5 h-5 text-gray-500 transition"
+              :class="{ 'rotate-180': openDropdown }"
+            />
+          </button>
+
+          <!-- Submenú -->
+          <transition name="fade">
+            <ul
+              v-if="openDropdown"
+              class="ml-10 mt-2 space-y-2 border-l pl-4 border-gray-200"
+            >
+              <li>
+                <RouterLink
+                  to="/admin/rutinas/comidas"
+                  class="block p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                >
+                  Comidas
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink
+                  to="/admin/rutinas/ejercicios"
+                  class="block p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                >
+                  Ejercicios
+                </RouterLink>
+              </li>
+            </ul>
+          </transition>
+        </li>
       </ul>
     </nav>
 
@@ -60,6 +102,7 @@
 </template>
 
 <script setup>
+import { ref } from "vue"
 import { RouterLink } from "vue-router"
 
 // Importar iconos desde Heroicons (outline)
@@ -67,7 +110,11 @@ import {
   HomeIcon,
   UsersIcon,
   ArrowLeftOnRectangleIcon,
-  BookOpenIcon 
+  BookOpenIcon,
+  ClipboardDocumentIcon,
+  ChevronDownIcon
 } from '@heroicons/vue/24/outline'
 import logo from "@/assets/images/logo-gc.png";
+
+const openDropdown = ref(false)
 </script>

@@ -12,6 +12,8 @@ import WeeklyPlannerView from '../views/WeeklyPlannerView.vue'
 import AdminDashboardView from '../views/AdminDashboard.vue'
 import AdminUsersView from '../views/AdminUsers.vue'
 import AdminPlansView from '../views/AdminPlans.vue'
+import AdminRoutineFoodView from '../views/AdminRoutineFood.vue'
+import AdminRoutineExercisesView from '../views/AdminRoutineExercises.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -64,11 +66,16 @@ const routes = [
         name: 'admin-planes',
         component: AdminPlansView
       },
-      // {
-      //   path: 'progress',
-      //   name: 'progress',
-      //   component: ProgressView
-      // }
+      {
+        path: 'rutinas/comidas',
+        name: 'admin-rutinas-comidas',
+        component: AdminRoutineFoodView
+      },
+      {
+        path: 'rutinas/ejercicios',
+        name: 'admin-rutinas-ejercicios',
+        component: AdminRoutineExercisesView
+      },
     ]
   },
   {
