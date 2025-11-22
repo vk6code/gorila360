@@ -52,7 +52,7 @@ const showProteins = ref(false)
       <h3 class="font-bold">
         Error de Conexión
       </h3>
-      <p>No se pudo conectar con el backend en <strong>http://localhost:8000/graphql</strong>.</p>
+      <p>No se pudo conectar con el backend en <strong>/graphql</strong>.</p>
       <p class="mt-2 text-sm">
         Asegúrate de que tu servidor de FastAPI esté corriendo y que la query <code>GetUserDietPlan</code> exista en tu esquema de GraphQL.
       </p>
@@ -93,7 +93,7 @@ const showProteins = ref(false)
           </button>
           <div v-if="showCarbs" class="mt-2 rounded-lg border border-gray-200 bg-white p-4">
             <ul class="list-disc space-y-2 pl-5">
-              <li v-for="carb in result.userDietplan.carbsPlanned" :key="carb.name">
+              <li v-for="carb in result.userDietPlan.carbsPlanned" :key="carb.name">
                 {{ carb.name }}: <strong>{{ carb.amount }}</strong>
               </li>
             </ul>
