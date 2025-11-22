@@ -39,16 +39,11 @@ export function useAuth() {
     window.location.href = '/login'
   }
 
-  const loginWithGoogle = () => {
-    window.location.href = '/auth/google'
-  }
-
   return {
     token: computed(() => token.value),
     user: computed(() => user.value),
     isAuthenticated,
     setToken,
     logout,
-    loginWithGoogle,
   }
 }

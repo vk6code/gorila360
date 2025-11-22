@@ -1,13 +1,19 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuth } from '@/stores/auth';
 import {
   ChevronLeftIcon,
-  HomeIcon,
-  CalendarIcon,
-  ArrowTrendingUpIcon,
-  UserIcon,
   PlayIcon
 } from '@heroicons/vue/24/solid';
+
+const router = useRouter();
+const { logout } = useAuth();
+
+const handleLogout = () => {
+  logout();
+  router.push('/');
+};
 
 // Mocking the GraphQL data for the MVP build
 const user = ref({ name: 'Alejandro' });
@@ -34,7 +40,9 @@ const startWorkout = () => {
   <div class="min-h-screen bg-gray-900 text-white font-sans pb-24">
 
     <header class="p-6 flex justify-between items-center">
-      <button class="text-gray-400"><ChevronLeftIcon class="w-6 h-6" /></button>
+      <button @click="handleLogout" class="text-gray-400 hover:text-white transition-colors">
+        <ChevronLeftIcon class="w-6 h-6" />
+      </button>
       <div class="text-center">
         <h1 class="text-xl font-bold tracking-tighter text-orange-500 uppercase">
           Gorilas<span class="text-white">360°</span>
@@ -131,23 +139,8 @@ const startWorkout = () => {
       </div>
     </section>
 
-    <nav class="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800 pb-6 pt-3 px-6 flex justify-between items-center z-50">
-      <div class="flex flex-col items-center text-orange-500">
-        <HomeIcon class="w-6 h-6" />
-        <span class="text-[10px] mt-1">Home</span>
-      </div>
-      <div class="flex flex-col items-center text-gray-500 hover:text-orange-400">
-        <CalendarIcon class="w-6 h-6" />
-        <span class="text-[10px] mt-1">Calendario</span>
-      </div>
-      <div class="flex flex-col items-center text-gray-500 hover:text-orange-400">
-        <ArrowTrendingUpIcon class="w-6 h-6" />
-        <span class="text-[10px] mt-1">Progreso</span>
-      </div>
-      <div class="flex flex-col items-center text-gray-500 hover:text-orange-400">
-        <UserIcon class="w-6 h-6" />
-        <span class="text-[10px] mt-1">Perfil</span>
-      </div>
+    <nav class="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800 pb-6 pt-3 px-6 flex justify-between items-center z-50 hidden">
+      <!-- Duplicate nav removed/hidden to avoid conflict with AppLayout -->
     </nav>
   </div>
 </template>
