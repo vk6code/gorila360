@@ -49,42 +49,52 @@
       <div>
         <button
           @click="startCountdown"
-          class="text-white px-4 py-2 rounded-lg font-semibold"
+          class="text-white px-8 py-4 rounded-lg font-semibold"
           :disabled="running"
+          style="border: 1px solid white;"
         >
-          Iniciar
+          <PlayIcon class="w-5 h-5 text-white" />
         </button>
       </div>
 
       <div>
         <button
           @click="pauseCountdown"
-          class="text-white px-4 py-2 rounded-lg font-semibold"
+          class="text-white px-8 py-4 rounded-lg font-semibold"
+          style="border: 1px solid white;"
         >
-          Pausar
+          <PauseIcon class="w-5 h-5 text-white" />
         </button>
       </div>
 
       <div>
         <button
           @click="resetCountdown"
-          class="text-white px-4 py-2 rounded-lg font-semibold"
+          class="text-white px-8 py-4 rounded-lg font-semibold"
+          style="border: 1px solid white;"
         >
-          Reiniciar
+          <ArrowPathRoundedSquareIcon class="w-5 h-5 text-white" />
         </button>
       </div>
     </div>
 
     <!-- Footer Button -->
-    <button class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded-full shadow-lg mb-6 w-xs">
-      Finalizar serie/entrenamiento
-    </button>
+    <div class="mt-auto flex justify-center">
+      <button class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded-full shadow-lg mb-6">
+        Finalizar serie/entrenamiento
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router';
+import {
+  PauseIcon,
+  PlayIcon,
+  ArrowPathRoundedSquareIcon
+} from '@heroicons/vue/24/outline'
 
 const router = useRouter();
 const totalTime = ref(120)
