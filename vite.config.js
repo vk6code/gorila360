@@ -14,6 +14,7 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
     VitePWA({
+      selfDestroying: true, // DESTROY SERVICE WORKER FOR DEBUGGING
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
