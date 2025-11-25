@@ -76,7 +76,6 @@ const proteinsPlanned = computed(() => {
     }))
 })
 
-const planName = computed(() => result.value?.dietPlan?.name || 'Plan Nutricional')
 const userName = computed(() => result.value?.me?.name || 'Usuario')
 
 // --- 4. Estado para controlar la visibilidad de las listas ---

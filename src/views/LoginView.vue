@@ -57,12 +57,19 @@
         </div>
       </div>
 
+      <!-- ERROR MESSAGE -->
+      <div v-if="errorMessage" class="text-red-500 text-sm text-center font-bold bg-red-900/20 p-2 rounded border border-red-900/50">
+        {{ errorMessage }}
+      </div>
+
       <!-- BOTÓN LOGIN -->
       <button
         type="submit"
-        class="btn h-12 mt-2 rounded-md text-black font-extrabold tracking-wider text-sm active:scale-[0.97] transition-all"
+        :disabled="isLoading"
+        class="btn h-12 mt-2 rounded-md text-black font-extrabold tracking-wider text-sm active:scale-[0.97] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        ENTRAR A LA GORILA CREW ELITE
+        <span v-if="isLoading">CARGANDO...</span>
+        <span v-else>ENTRAR A LA GORILA CREW ELITE</span>
       </button>
     </form>
 
@@ -136,8 +143,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useMutation } from "@vue/apollo-composable";
-import gql from "graphql-tag";
 import logo from "@/assets/images/logo-gc.png";
 import { useAuth } from "@/stores/auth";
 
@@ -147,6 +152,8 @@ const { setToken } = useAuth();
 // --- 1. Referencias para los campos del formulario ---
 const email = ref("");
 const password = ref("");
+const errorMessage = ref("");
+const isLoading = ref(false);
 
 // --- 2. Capturar token de OAuth desde URL ---
 onMounted(() => {
@@ -161,38 +168,46 @@ onMounted(() => {
   }
 });
 
-// --- 3. Definición de la mutación de GraphQL para el login ---
-const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
-    # El nombre de la mutación 'tokenAuth' puede variar según tu backend
-    tokenAuth(email: $email, password: $password) {
-      token
-      user {
-        name
-      }
+// --- 3. Función de Login (REST API) ---
+async function handleLogin() {
+  errorMessage.value = "";
+  isLoading.value = true;
+
+  try {
+    const response = await fetch('/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || 'Error al iniciar sesión');
     }
+
+    const token = data.access_token;
+
+    // Guardar token usando el store
+    setToken(token);
+
+    // Opcional: Guardar flag de sesión (aunque useAuth ya maneja el token)
+    localStorage.setItem("loggedIn", true);
+
+    // Redirigir
+    router.push("/app/dashboard");
+
+  } catch (error) {
+    console.error("Login error:", error);
+    errorMessage.value = error.message;
+  } finally {
+    isLoading.value = false;
   }
-`;
-
-// --- 4. Hook para ejecutar la mutación ---
-const { mutate: loginUser, onDone } = useMutation(LOGIN_MUTATION);
-
-// --- 5. Callback que se ejecuta si el login es exitoso ---
-onDone(result => {
-  const token = result.data.tokenAuth.token;
-  const userName = result.data.tokenAuth.user.name;
-
-  setToken(token); // Usar el store de auth
-  localStorage.setItem("userName", userName); // Guardamos el nombre del usuario
-  localStorage.setItem("loggedIn", true); // Mantenemos tu flag de sesión
-  router.push("/app/dashboard");
-});
-
-function handleLogin() {
-  loginUser({
-    email: email.value,
-    password: password.value,
-  });
 }
 
 function bypassLogin() {
