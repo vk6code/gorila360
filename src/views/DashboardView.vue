@@ -13,8 +13,11 @@ const handleLogout = () => {
   window.location.href = 'https://gorila360.es';
 };
 
-// Mocking the GraphQL data for the MVP build
-const user = ref({ name: 'Alejandro' });
+// Usar datos reales del usuario autenticado
+const { user: authUser } = useAuth();
+const user = ref({
+  name: authUser.value?.name || 'Atleta'
+});
 const dailyWorkout = ref({
   title: 'Entreno de Pierna',
   image: '/assets/leg-day-bg.jpg', // Use a dark, gritty gym texture
