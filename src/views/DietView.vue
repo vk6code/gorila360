@@ -1,27 +1,28 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 
 // --- 1. Define la consulta GraphQL ---
-// Esta es una consulta de EJEMPLO. Debes asegurarte de que tu esquema de GraphQL
-// en el backend de FastAPI pueda resolver esto.
+// Actualizado según la documentación del Módulo 4: Dieta
 const GET_DIET_PLAN = gql`
   query GetUserDietPlan {
-    # Asumimos que tienes una query "userDietPlan" que devuelve el plan del usuario
-    userDietPlan {
-      userName
-      fatsPlanned {
+    # Usamos ID "1" para probar como indica la guía.
+    # En producción esto debería venir del usuario autenticado.
+    dietPlan(userId: "1") {
+      name
+      meals {
         name
-        amount
-      }
-      carbsPlanned {
-        name
-        amount
-      }
-      proteinsPlanned {
-        name
-        amount
+        foods {
+          amount
+          unit
+          food {
+            name
+            proteinsG
+            fatsG
+            carbsG
+          }
+        }
       }
     }
   }
@@ -30,7 +31,51 @@ const GET_DIET_PLAN = gql`
 // --- 2. Ejecuta la consulta ---
 const { result, loading, error } = useQuery(GET_DIET_PLAN)
 
-// --- 3. Estado para controlar la visibilidad de las listas ---
+// --- 3. Lógica de Adaptación (Opción B) ---
+// Aplanamos la estructura jerárquica (Plan -> Comidas -> Alimentos)
+// para mantener el diseño visual por macros.
+
+const allFoods = computed(() => {
+  if (!result.value?.dietPlan?.meals) return []
+  return result.value.dietPlan.meals.flatMap(meal => meal.foods)
+})
+
+// Filtra alimentos ricos en GRASAS
+// Criterio: más de 5g de grasa
+const fatsPlanned = computed(() => {
+  return allFoods.value
+    .filter(item => item.food.fatsG > 5)
+    .map(item => ({
+      name: item.food.name,
+      amount: `${item.amount} ${item.unit}`
+    }))
+})
+
+// Filtra alimentos ricos en CARBOHIDRATOS
+// Criterio: más de 10g de carbohidratos
+const carbsPlanned = computed(() => {
+  return allFoods.value
+    .filter(item => item.food.carbsG > 10)
+    .map(item => ({
+      name: item.food.name,
+      amount: `${item.amount} ${item.unit}`
+    }))
+})
+
+// Filtra alimentos ricos en PROTEINAS
+// Criterio: más de 5g de proteína
+const proteinsPlanned = computed(() => {
+  return allFoods.value
+    .filter(item => item.food.proteinsG > 5)
+    .map(item => ({
+      name: item.food.name,
+      amount: `${item.amount} ${item.unit}`
+    }))
+})
+
+const planName = computed(() => result.value?.dietPlan?.name || 'Plan Nutricional')
+
+// --- 4. Estado para controlar la visibilidad de las listas ---
 const showFats = ref(false)
 const showCarbs = ref(false)
 const showProteins = ref(false)
@@ -44,7 +89,7 @@ const showProteins = ref(false)
 
     <!-- Estado de carga -->
     <div v-if="loading" class="mt-4 text-text-secondary animate-pulse">
-      Cargando datos de la dieta...
+      Cargando plan nutricional...
     </div>
 
     <!-- Estado de error -->
@@ -53,14 +98,14 @@ const showProteins = ref(false)
         <span class="material-symbols-outlined">error</span>
         Error de Conexión
       </h3>
-      <p class="text-sm mt-2 text-red-300/80">No se pudo conectar con el backend.</p>
+      <p class="text-sm mt-2 text-red-300/80">No se pudo cargar el plan de dieta.</p>
       <pre class="mt-3 whitespace-pre-wrap rounded bg-black/30 p-3 text-xs text-red-300 font-mono border border-red-900/30">{{ error.message }}</pre>
     </div>
 
     <!-- Contenido principal cuando los datos están listos -->
-    <div v-if="result && result.userDietPlan" class="mt-2">
+    <div v-if="result && result.dietPlan" class="mt-2">
       <h2 class="text-heading-md font-semibold text-white mb-6">
-        Plan de <span class="text-accent-primary">{{ result.userDietPlan.userName }}</span>
+        <span class="text-accent-primary">{{ planName }}</span>
       </h2>
 
       <div class="space-y-4">
@@ -83,9 +128,12 @@ const showProteins = ref(false)
           </button>
           <div v-show="showFats" class="border-t border-[#2A2A2A] bg-[#0E0E0E] p-5 transition-all">
             <ul class="space-y-3">
-              <li v-for="fat in result.userDietPlan.fatsPlanned" :key="fat.name" class="flex justify-between text-sm text-gray-300 border-b border-[#1F1F1F] pb-2 last:border-0 last:pb-0">
+              <li v-for="(fat, index) in fatsPlanned" :key="index" class="flex justify-between text-sm text-gray-300 border-b border-[#1F1F1F] pb-2 last:border-0 last:pb-0">
                 <span>{{ fat.name }}</span>
                 <strong class="text-accent-primary">{{ fat.amount }}</strong>
+              </li>
+              <li v-if="fatsPlanned.length === 0" class="text-xs text-gray-500 italic">
+                No hay alimentos altos en grasas en este plan.
               </li>
             </ul>
           </div>
@@ -110,9 +158,12 @@ const showProteins = ref(false)
           </button>
           <div v-show="showCarbs" class="border-t border-[#2A2A2A] bg-[#0E0E0E] p-5 transition-all">
             <ul class="space-y-3">
-              <li v-for="carb in result.userDietPlan.carbsPlanned" :key="carb.name" class="flex justify-between text-sm text-gray-300 border-b border-[#1F1F1F] pb-2 last:border-0 last:pb-0">
+              <li v-for="(carb, index) in carbsPlanned" :key="index" class="flex justify-between text-sm text-gray-300 border-b border-[#1F1F1F] pb-2 last:border-0 last:pb-0">
                 <span>{{ carb.name }}</span>
                 <strong class="text-accent-primary">{{ carb.amount }}</strong>
+              </li>
+              <li v-if="carbsPlanned.length === 0" class="text-xs text-gray-500 italic">
+                No hay alimentos altos en carbohidratos en este plan.
               </li>
             </ul>
           </div>
@@ -137,14 +188,23 @@ const showProteins = ref(false)
           </button>
           <div v-show="showProteins" class="border-t border-[#2A2A2A] bg-[#0E0E0E] p-5 transition-all">
             <ul class="space-y-3">
-              <li v-for="protein in result.userDietPlan.proteinsPlanned" :key="protein.name" class="flex justify-between text-sm text-gray-300 border-b border-[#1F1F1F] pb-2 last:border-0 last:pb-0">
+              <li v-for="(protein, index) in proteinsPlanned" :key="index" class="flex justify-between text-sm text-gray-300 border-b border-[#1F1F1F] pb-2 last:border-0 last:pb-0">
                 <span>{{ protein.name }}</span>
                 <strong class="text-accent-primary">{{ protein.amount }}</strong>
+              </li>
+              <li v-if="proteinsPlanned.length === 0" class="text-xs text-gray-500 italic">
+                No hay alimentos altos en proteínas en este plan.
               </li>
             </ul>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Mensaje si no hay plan -->
+    <div v-else-if="result && !result.dietPlan" class="mt-8 text-center text-gray-500">
+      <span class="material-symbols-outlined text-4xl mb-2">no_meals</span>
+      <p>No se encontró un plan nutricional activo.</p>
     </div>
   </div>
 </template>
