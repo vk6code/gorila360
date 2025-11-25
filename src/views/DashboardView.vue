@@ -16,7 +16,7 @@ const handleLogout = () => {
 // Usar datos reales del usuario autenticado
 const { user: authUser } = useAuth();
 const user = ref({
-  name: authUser.value?.name || 'Atleta'
+  name: authUser.value?.name || 'Gorila'
 });
 const dailyWorkout = ref({
   title: 'Entreno de Pierna',
