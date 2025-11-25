@@ -14,6 +14,10 @@ import AdminUsersView from '../views/AdminUsers.vue'
 import AdminPlansView from '../views/AdminPlans.vue'
 import AdminRoutineFoodView from '../views/AdminRoutineFood.vue'
 import AdminRoutineExercisesView from '../views/AdminRoutineExercises.vue'
+import AdminUsersCalendarView from '../views/AdminUserCalendar.vue'
+import AdminRoutineExercisesExercisesView from '../views/AdminRoutineExercisesExercises.vue'
+import AdminRoutineExercisesWorkoutsView from '../views/AdminRoutineExercisesWorkouts.vue'
+
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -71,11 +75,33 @@ const routes = [
         name: 'admin-rutinas-comidas',
         component: AdminRoutineFoodView
       },
+
+      {
+        path: 'usuarios/:usuario/calendar',
+        name: 'admin-usuario-calendario',
+        component: AdminUsersCalendarView
+      },
       {
         path: 'rutinas/ejercicios',
         name: 'admin-rutinas-ejercicios',
-        component: AdminRoutineExercisesView
-      },
+        component: AdminRoutineExercisesView,
+        children: [
+          { 
+            path: '', 
+            redirect: 'rutinas/ejercicios/ejercicios' 
+          },
+          {
+            path: 'ejercicios',
+            name: 'admin-ejercicios-ejercicios',
+            component: AdminRoutineExercisesExercisesView
+          },
+          {
+            path: 'workouts',
+            name: 'admin-ejercicios-workouts',
+            component: AdminRoutineExercisesWorkoutsView
+          },
+        ]
+      }
     ]
   },
   {
