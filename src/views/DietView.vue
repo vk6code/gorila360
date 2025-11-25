@@ -7,6 +7,9 @@ import gql from 'graphql-tag'
 // Actualizado según la documentación del Módulo 4: Dieta
 const GET_DIET_PLAN = gql`
   query GetUserDietPlan {
+    me {
+      name
+    }
     # Usamos ID "1" para probar como indica la guía.
     # En producción esto debería venir del usuario autenticado.
     dietPlan(userId: "1") {
@@ -74,6 +77,7 @@ const proteinsPlanned = computed(() => {
 })
 
 const planName = computed(() => result.value?.dietPlan?.name || 'Plan Nutricional')
+const userName = computed(() => result.value?.me?.name || 'Usuario')
 
 // --- 4. Estado para controlar la visibilidad de las listas ---
 const showFats = ref(false)
@@ -105,7 +109,7 @@ const showProteins = ref(false)
     <!-- Contenido principal cuando los datos están listos -->
     <div v-if="result && result.dietPlan" class="mt-2">
       <h2 class="text-heading-md font-semibold text-white mb-6">
-        <span class="text-accent-primary">{{ planName }}</span>
+        Hola, <span class="text-accent-primary">{{ userName }}</span>, este es tu plan nutricional!
       </h2>
 
       <div class="space-y-4">
@@ -204,7 +208,7 @@ const showProteins = ref(false)
     <!-- Mensaje si no hay plan -->
     <div v-else-if="result && !result.dietPlan" class="mt-8 text-center text-gray-500">
       <span class="material-symbols-outlined text-4xl mb-2">no_meals</span>
-      <p>No se encontró un plan nutricional activo.</p>
+      <p>Hola, {{ userName }}. No se encontró un plan nutricional Activo.</p>
     </div>
   </div>
 </template>
