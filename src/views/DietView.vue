@@ -23,6 +23,8 @@ const error = computed(() => dietStore.error)
 const dietPlan = computed(() => dietStore.dietPlan)
 
 const userName = computed(() => user.value?.name || 'Usuario')
+// Debug: Compute userId to show what we are using
+const userId = computed(() => user.value?.sub || user.value?.id || "1")
 
 // --- Estado para controlar la visibilidad de las listas ---
 const showFats = ref(false)
@@ -35,9 +37,18 @@ const showProteins = ref(false)
     <h1 class="text-heading-lg font-bold text-accent-primary mb-6">
       Dieta
     </h1>
-    <pre class="text-xs text-green-400 bg-black p-4 overflow-auto max-h-40 border border-green-900">
-      {{ dietPlan }}
-    </pre>
+
+    <!-- Debug Panel (Chivato) -->
+    <div class="mb-6 p-4 bg-gray-900 rounded-xl border border-gray-700 text-xs font-mono text-green-400 overflow-x-auto">
+      <h3 class="font-bold text-white mb-2 border-b border-gray-700 pb-1">🕵️ Chivato de Datos</h3>
+      <div class="grid grid-cols-2 gap-2 mb-2">
+        <div><span class="text-gray-400">User ID:</span> {{ userId }}</div>
+        <div><span class="text-gray-400">Loading:</span> {{ loading }}</div>
+        <div class="col-span-2"><span class="text-gray-400">Error:</span> {{ error?.message || error || 'None' }}</div>
+      </div>
+      <p class="text-gray-400 mb-1">Diet Plan (Raw):</p>
+      <pre class="bg-black/50 p-2 rounded max-h-40 overflow-auto">{{ dietPlan || 'null' }}</pre>
+    </div>
 
     <!-- Estado de carga (Solo si no hay datos locales y está cargando) -->
     <div v-if="loading && !dietPlan" class="mt-4 text-text-secondary animate-pulse">

@@ -65,6 +65,9 @@ export const syncService = {
 
         console.log('[Sync] Diet plan synced successfully.');
         return planToSave;
+      } else {
+        console.warn('[Sync] No diet plan found in server response for user:', userId, data);
+        return null;
       }
     } catch (error) {
       console.error('[Sync] Error syncing diet:', error);
