@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
+import { useAuth } from '@/stores/auth'
 
 // --- 1. Define la consulta GraphQL ---
 // Actualizado según la documentación del Módulo 4: Dieta
@@ -76,7 +77,8 @@ const proteinsPlanned = computed(() => {
     }))
 })
 
-const userName = computed(() => result.value?.me?.name || 'Usuario')
+const { user } = useAuth()
+const userName = computed(() => user.value?.name || result.value?.me?.name || 'Usuario')
 
 // --- 4. Estado para controlar la visibilidad de las listas ---
 const showFats = ref(false)
