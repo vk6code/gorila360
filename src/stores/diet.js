@@ -70,7 +70,7 @@ export const useDietStore = defineStore('diet', () => {
 
   const fatsPlanned = computed(() => {
     return allFoods.value
-      .filter(item => item.food.fatsG > 5)
+      .filter(item => item.food && item.food.fatsG > 5)
       .map(item => ({
         name: item.food.name,
         amount: `${item.amount} ${item.unit}`
@@ -79,7 +79,7 @@ export const useDietStore = defineStore('diet', () => {
 
   const carbsPlanned = computed(() => {
     return allFoods.value
-      .filter(item => item.food.carbsG > 10)
+      .filter(item => item.food && item.food.carbsG > 10)
       .map(item => ({
         name: item.food.name,
         amount: `${item.amount} ${item.unit}`
@@ -88,7 +88,7 @@ export const useDietStore = defineStore('diet', () => {
 
   const proteinsPlanned = computed(() => {
     return allFoods.value
-      .filter(item => item.food.proteinsG > 5)
+      .filter(item => item.food && item.food.proteinsG > 5)
       .map(item => ({
         name: item.food.name,
         amount: `${item.amount} ${item.unit}`

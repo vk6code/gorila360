@@ -45,7 +45,7 @@ const showProteins = ref(false)
 <template>
   <div class="flex flex-col p-6 font-display text-text-primary">
     <h1 class="text-heading-lg font-bold text-accent-primary mb-6">
-      Dieta (Debug Mode)
+      Dieta
     </h1>
 
     <!-- Debug Panel (Chivato) -->
@@ -57,11 +57,10 @@ const showProteins = ref(false)
         <div class="col-span-2"><span class="text-gray-400">Error:</span> {{ error?.message || error || 'None' }}</div>
       </div>
       <p class="text-gray-400 mb-1">Diet Plan Status:</p>
-      <!-- Avoid printing the full object to prevent _s error if it's the cause -->
       <pre class="bg-black/50 p-2 rounded max-h-40 overflow-auto">{{ dietPlan ? 'Plan Loaded (Object)' : 'No Plan (null)' }}</pre>
     </div>
 
-    <!-- Estado de carga -->
+    <!-- Estado de carga (Solo si no hay datos locales y está cargando) -->
     <div v-if="loading && !dietPlan" class="mt-4 text-text-secondary animate-pulse">
       Cargando plan nutricional...
     </div>
@@ -73,9 +72,10 @@ const showProteins = ref(false)
         Error de Conexión
       </h3>
       <p class="text-sm mt-2 text-red-300/80">No se pudo cargar el plan de dieta.</p>
+      <pre class="mt-3 whitespace-pre-wrap rounded bg-black/30 p-3 text-xs text-red-300 font-mono border border-red-900/30">{{ error.message }}</pre>
     </div>
 
-    <!-- Contenido principal -->
+    <!-- Contenido principal cuando los datos están listos (Local o Remoto) -->
     <div v-if="dietPlan" class="mt-2">
       <h2 class="text-heading-md font-semibold text-white mb-6">
         Hola, <span class="text-accent-primary">{{ userName }}</span>, este es tu plan nutricional!
