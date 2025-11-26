@@ -8,6 +8,8 @@ import router from './router'
 
 import { apolloClient } from './apollo'
 
+import { createPinia } from 'pinia'
+
 const app = createApp({
   setup() {
     provide(DefaultApolloClient, apolloClient)
@@ -15,5 +17,6 @@ const app = createApp({
   render: () => h(App),
 })
 
+app.use(createPinia())
 app.use(VueApexCharts)
 app.use(router).mount('#app')
