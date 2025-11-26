@@ -5,15 +5,13 @@ import gql from 'graphql-tag'
 import { useAuth } from '@/stores/auth'
 
 // --- 1. Define la consulta GraphQL ---
-// Actualizado según la documentación del Módulo 4: Dieta
+// Actualizado para usar el ID del usuario autenticado
 const GET_DIET_PLAN = gql`
-  query GetUserDietPlan {
+  query GetUserDietPlan($userId: ID!) {
     me {
       name
     }
-    # Usamos ID "1" para probar como indica la guía.
-    # En producción esto debería venir del usuario autenticado.
-    dietPlan(userId: "1") {
+    dietPlan(userId: $userId) {
       name
       meals {
         name
@@ -33,7 +31,13 @@ const GET_DIET_PLAN = gql`
 `
 
 // --- 2. Ejecuta la consulta ---
-const { result, loading, error } = useQuery(GET_DIET_PLAN)
+const { user } = useAuth()
+// Intentamos obtener el ID del usuario desde el token (sub o id), fallback a "1" si no existe
+const userId = computed(() => user.value?.sub || user.value?.id || "1")
+
+const { result, loading, error } = useQuery(GET_DIET_PLAN, () => ({
+  userId: userId.value
+}))
 
 // --- 3. Lógica de Adaptación (Opción B) ---
 // Aplanamos la estructura jerárquica (Plan -> Comidas -> Alimentos)
@@ -77,7 +81,6 @@ const proteinsPlanned = computed(() => {
     }))
 })
 
-const { user } = useAuth()
 const userName = computed(() => user.value?.name || result.value?.me?.name || 'Usuario')
 
 // --- 4. Estado para controlar la visibilidad de las listas ---
