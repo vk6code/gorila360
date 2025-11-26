@@ -7,34 +7,33 @@ import { useDietStore } from '@/stores/diet'
 const auth = useAuth()
 const dietStore = useDietStore()
 
-// LOGS DE DEBUG (Mira la consola del navegador)
+// LOGS DE DEBUG
 console.log('--- DEBUG START ---')
-console.log('Store completo:', dietStore)
-console.log('Fats en store:', dietStore.fatsPlanned) // Si esto dice undefined, revisa el return del store
-console.log('Auth user:', auth.user)
+console.log('DietStore:', dietStore)
+// Accessing .value because auth.user is a computed ref
+console.log('Auth User (raw):', auth.user)
+console.log('Auth User (value):', auth.user?.value)
 console.log('--- DEBUG END ---')
 
 // Inicialización segura
 onMounted(() => {
-  if (dietStore.loadFromLocal) dietStore.loadFromLocal()
-  if (dietStore.sync) dietStore.sync()
+  if (dietStore && dietStore.loadFromLocal) dietStore.loadFromLocal()
+  if (dietStore && dietStore.sync) dietStore.sync()
 })
 
-// Mapeo seguro (evita que crashee si el store está roto)
-const fatsPlanned = computed(() => dietStore.fatsPlanned || [])
-const carbsPlanned = computed(() => dietStore.carbsPlanned || [])
-const proteinsPlanned = computed(() => dietStore.proteinsPlanned || [])
-const loading = computed(() => dietStore.loading || false)
-const error = computed(() => dietStore.error || null)
-const dietPlan = computed(() => dietStore.dietPlan || null)
+// Mapeo seguro
+const fatsPlanned = computed(() => dietStore?.fatsPlanned || [])
+const carbsPlanned = computed(() => dietStore?.carbsPlanned || [])
+const proteinsPlanned = computed(() => dietStore?.proteinsPlanned || [])
+const loading = computed(() => dietStore?.loading || false)
+const error = computed(() => dietStore?.error || null)
+// Avoid complex object interpolation for now
+const dietPlan = computed(() => dietStore?.dietPlan || null)
 
 // Manejo seguro del usuario
-const user = computed(() => auth.user || null)
-const userName = computed(() => {
-  if (user.value && user.value.name) return user.value.name
-  return 'Usuario'
-})
-// Debug: Compute userId to show what we are using
+// auth.user is a ComputedRef, so we access .value
+const user = computed(() => auth.user?.value || null)
+const userName = computed(() => user.value?.name || 'Usuario')
 const userId = computed(() => user.value?.sub || user.value?.id || "1")
 
 // UI State
@@ -46,7 +45,7 @@ const showProteins = ref(false)
 <template>
   <div class="flex flex-col p-6 font-display text-text-primary">
     <h1 class="text-heading-lg font-bold text-accent-primary mb-6">
-      Dieta
+      Dieta (Debug Mode)
     </h1>
 
     <!-- Debug Panel (Chivato) -->
@@ -57,11 +56,12 @@ const showProteins = ref(false)
         <div><span class="text-gray-400">Loading:</span> {{ loading }}</div>
         <div class="col-span-2"><span class="text-gray-400">Error:</span> {{ error?.message || error || 'None' }}</div>
       </div>
-      <p class="text-gray-400 mb-1">Diet Plan (Raw):</p>
-      <pre class="bg-black/50 p-2 rounded max-h-40 overflow-auto">{{ dietPlan || 'null' }}</pre>
+      <p class="text-gray-400 mb-1">Diet Plan Status:</p>
+      <!-- Avoid printing the full object to prevent _s error if it's the cause -->
+      <pre class="bg-black/50 p-2 rounded max-h-40 overflow-auto">{{ dietPlan ? 'Plan Loaded (Object)' : 'No Plan (null)' }}</pre>
     </div>
 
-    <!-- Estado de carga (Solo si no hay datos locales y está cargando) -->
+    <!-- Estado de carga -->
     <div v-if="loading && !dietPlan" class="mt-4 text-text-secondary animate-pulse">
       Cargando plan nutricional...
     </div>
@@ -73,10 +73,9 @@ const showProteins = ref(false)
         Error de Conexión
       </h3>
       <p class="text-sm mt-2 text-red-300/80">No se pudo cargar el plan de dieta.</p>
-      <pre class="mt-3 whitespace-pre-wrap rounded bg-black/30 p-3 text-xs text-red-300 font-mono border border-red-900/30">{{ error.message }}</pre>
     </div>
 
-    <!-- Contenido principal cuando los datos están listos (Local o Remoto) -->
+    <!-- Contenido principal -->
     <div v-if="dietPlan" class="mt-2">
       <h2 class="text-heading-md font-semibold text-white mb-6">
         Hola, <span class="text-accent-primary">{{ userName }}</span>, este es tu plan nutricional!
