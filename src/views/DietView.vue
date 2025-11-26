@@ -3,30 +3,41 @@ import { onMounted, computed, ref } from 'vue'
 import { useAuth } from '@/stores/auth'
 import { useDietStore } from '@/stores/diet'
 
-const { user } = useAuth()
+// Inicializamos con seguridad
+const auth = useAuth()
 const dietStore = useDietStore()
 
-// Initialize store
+// LOGS DE DEBUG (Mira la consola del navegador)
+console.log('--- DEBUG START ---')
+console.log('Store completo:', dietStore)
+console.log('Fats en store:', dietStore.fatsPlanned) // Si esto dice undefined, revisa el return del store
+console.log('Auth user:', auth.user)
+console.log('--- DEBUG END ---')
+
+// Inicialización segura
 onMounted(() => {
-  // 1. Load local data immediately (0ms latency)
-  dietStore.loadFromLocal()
-  // 2. Sync with server in background
-  dietStore.sync()
+  if (dietStore.loadFromLocal) dietStore.loadFromLocal()
+  if (dietStore.sync) dietStore.sync()
 })
 
-// Computed properties mapped from store
-const fatsPlanned = computed(() => dietStore.fatsPlanned)
-const carbsPlanned = computed(() => dietStore.carbsPlanned)
-const proteinsPlanned = computed(() => dietStore.proteinsPlanned)
-const loading = computed(() => dietStore.loading)
-const error = computed(() => dietStore.error)
-const dietPlan = computed(() => dietStore.dietPlan)
+// Mapeo seguro (evita que crashee si el store está roto)
+const fatsPlanned = computed(() => dietStore.fatsPlanned || [])
+const carbsPlanned = computed(() => dietStore.carbsPlanned || [])
+const proteinsPlanned = computed(() => dietStore.proteinsPlanned || [])
+const loading = computed(() => dietStore.loading || false)
+const error = computed(() => dietStore.error || null)
+const dietPlan = computed(() => dietStore.dietPlan || null)
 
-const userName = computed(() => user.value?.name || 'Usuario')
+// Manejo seguro del usuario
+const user = computed(() => auth.user || null)
+const userName = computed(() => {
+  if (user.value && user.value.name) return user.value.name
+  return 'Usuario'
+})
 // Debug: Compute userId to show what we are using
 const userId = computed(() => user.value?.sub || user.value?.id || "1")
 
-// --- Estado para controlar la visibilidad de las listas ---
+// UI State
 const showFats = ref(false)
 const showCarbs = ref(false)
 const showProteins = ref(false)
