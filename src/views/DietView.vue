@@ -35,6 +35,9 @@ const showProteins = ref(false)
     <h1 class="text-heading-lg font-bold text-accent-primary mb-6">
       Dieta
     </h1>
+    <pre class="text-xs text-green-400 bg-black p-4 overflow-auto max-h-40 border border-green-900">
+      {{ dietPlan }}
+    </pre>
 
     <!-- Estado de carga (Solo si no hay datos locales y está cargando) -->
     <div v-if="loading && !dietPlan" class="mt-4 text-text-secondary animate-pulse">
