@@ -24,7 +24,6 @@ const dietPlan = computed(() => dietStore?.dietPlan || null)
 // Manejo seguro del usuario
 const user = computed(() => auth.user?.value || null)
 const userName = computed(() => user.value?.name || 'Usuario')
-const userId = computed(() => user.value?.sub || user.value?.id || "1")
 
 // UI State
 const activeTab = ref('fats')

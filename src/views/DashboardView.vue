@@ -1,10 +1,6 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useAuth } from '@/stores/auth';
-import {
-  ChevronLeftIcon,
-  PlayIcon
-} from '@heroicons/vue/24/solid';
 
 const { logout } = useAuth();
 
@@ -15,13 +11,15 @@ const handleLogout = () => {
 
 // Usar datos reales del usuario autenticado
 const { user: authUser } = useAuth();
-const user = ref({
+const user = computed(() => ({
   name: authUser.value?.name || 'Gorila'
-});
+}));
+
 const dailyWorkout = ref({
   title: 'Entreno de Pierna',
-  image: '/assets/leg-day-bg.jpg', // Use a dark, gritty gym texture
+  image: '/assets/leg-day-bg.jpg', // Placeholder
 });
+
 const stats = ref({
   streak: 3,
   streakTarget: 4,
@@ -38,32 +36,36 @@ const startWorkout = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-900 text-white font-sans pb-24">
+  <div class="min-h-screen bg-background-primary text-text-primary font-sans pb-24">
 
+    <!-- Header -->
     <header class="p-6 flex justify-between items-center">
-      <button @click="handleLogout" class="text-gray-400 hover:text-white transition-colors">
-        <ChevronLeftIcon class="w-6 h-6" />
+      <button @click="handleLogout" class="text-text-secondary hover:text-white transition-colors">
+        <span class="material-symbols-outlined">logout</span>
       </button>
       <div class="text-center">
-        <h1 class="text-xl font-bold tracking-tighter text-orange-500 uppercase">
+        <h1 class="text-heading-md font-bold tracking-tighter text-accent-primary uppercase">
           Gorilas<span class="text-white">360°</span>
         </h1>
-        <p class="text-xs text-gray-400">¡Hola, {{ user.name }}.</p>
+        <p class="text-caption text-text-secondary uppercase tracking-wider">¡Hola, {{ user.name }}!</p>
       </div>
-      <div class="w-6"></div> </header>
+      <div class="w-6"></div> <!-- Spacer for centering -->
+    </header>
 
-    <section class="px-4 mb-6">
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-900/80 to-gray-800 border border-orange-500/20 shadow-lg shadow-orange-900/20 p-6 text-center h-64 flex flex-col justify-center items-center group">
-        <div class="absolute inset-0 bg-black/40 z-0">
-          <img v-if="dailyWorkout.image" :src="dailyWorkout.image" class="w-full h-full object-cover opacity-50 mix-blend-overlay" alt="Workout bg" />
+    <!-- Hero Section: Daily Workout -->
+    <section class="px-4 mb-8">
+      <div class="relative overflow-hidden rounded-[16px] bg-surface border border-[#333] shadow-lg p-6 text-center h-64 flex flex-col justify-center items-center group">
+        <!-- Background Image/Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0">
+          <img v-if="dailyWorkout.image" :src="dailyWorkout.image" class="w-full h-full object-cover opacity-30 mix-blend-overlay" alt="Workout bg" />
         </div>
 
-        <div class="relative z-10">
-          <div class="flex items-center justify-center space-x-2 mb-4">
-            <span class="text-2xl">💪</span>
-            <h2 class="text-2xl font-extrabold leading-tight">
-              ¡Hoy toca <br/>
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-200">
+        <div class="relative z-10 flex flex-col items-center">
+          <div class="mb-4">
+            <span class="text-4xl mb-2 block">💪</span>
+            <h2 class="text-heading-lg font-bold leading-none text-white">
+              HOY TOCA <br/>
+              <span class="text-accent-primary">
                 {{ dailyWorkout.title }}
               </span>
             </h2>
@@ -71,83 +73,89 @@ const startWorkout = () => {
 
           <button
             @click="startWorkout"
-            class="mt-4 flex flex-col items-center transition-transform transform group-hover:scale-105 active:scale-95"
+            class="mt-2 flex flex-col items-center transition-transform transform group-hover:scale-105 active:scale-95"
           >
-            <div class="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center shadow-orange-500/50 shadow-lg mb-2 animate-pulse-slow">
-              <PlayIcon class="w-8 h-8 text-white ml-1" />
+            <div class="w-16 h-16 rounded-full bg-accent-primary text-black flex items-center justify-center shadow-gold-glow mb-3 animate-pulse-slow">
+              <span class="material-symbols-outlined text-4xl">play_arrow</span>
             </div>
-            <span class="text-xs font-semibold tracking-wider uppercase text-orange-100">
-              Iniciar Entrenamiento
+            <span class="text-xs font-bold tracking-widest uppercase text-accent-primary">
+              Iniciar
             </span>
           </button>
         </div>
       </div>
     </section>
 
+    <!-- Stats Section -->
     <section class="px-4 space-y-4">
-      <div class="bg-gray-800/50 backdrop-blur-md rounded-xl p-5 border border-gray-700">
-        <h3 class="text-sm font-bold text-gray-300 mb-4 flex items-center">
-          🦍 Mi Misión Gorila
+      <div class="bg-surface rounded-[16px] p-6 border border-[#333]">
+        <h3 class="text-sm font-bold text-text-secondary uppercase tracking-wider mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-accent-primary">fitness_center</span>
+          Mi Misión Gorila
         </h3>
 
-        <div class="mb-4">
-          <div class="flex justify-between text-xs mb-1">
-            <span class="text-gray-400">🔥 Racha: {{ stats.streak }}/{{ stats.streakTarget }} entrenos</span>
-            <span class="text-orange-400 font-bold">75%</span>
+        <!-- Streak -->
+        <div class="mb-6">
+          <div class="flex justify-between text-xs mb-2 uppercase tracking-wide">
+            <span class="text-text-secondary">Racha Semanal</span>
+            <span class="text-white font-bold">{{ stats.streak }}/{{ stats.streakTarget }}</span>
           </div>
-          <div class="w-full bg-gray-700 rounded-full h-2.5">
-            <div class="bg-gradient-to-r from-orange-600 to-orange-400 h-2.5 rounded-full" style="width: 75%"></div>
-          </div>
-        </div>
-
-        <div class="mb-4">
-          <div class="flex justify-between text-xs mb-1">
-            <span class="text-gray-400">🚀 Hito Visual: 8 semanas restantes</span>
-          </div>
-          <div class="w-full bg-gray-700 rounded-full h-2.5">
-            <div class="bg-orange-500 h-2.5 rounded-full" style="width: 15%"></div>
+          <div class="w-full bg-[#222] rounded-full h-2">
+            <div class="bg-accent-primary h-2 rounded-full shadow-gold-glow" style="width: 75%"></div>
           </div>
         </div>
 
+        <!-- Visual Goal -->
+        <div class="mb-6">
+          <div class="flex justify-between text-xs mb-2 uppercase tracking-wide">
+            <span class="text-text-secondary">Hito Visual (8 semanas)</span>
+            <span class="text-accent-primary font-bold">15%</span>
+          </div>
+          <div class="w-full bg-[#222] rounded-full h-2">
+            <div class="bg-accent-primary/80 h-2 rounded-full" style="width: 15%"></div>
+          </div>
+        </div>
+
+        <!-- Mission -->
         <div>
-          <div class="flex justify-between text-xs mb-1">
-            <span class="text-gray-400">🎯 {{ user.mission || 'Padre imparable' }}</span>
-            <span class="text-gray-500">4%</span>
+          <div class="flex justify-between text-xs mb-2 uppercase tracking-wide">
+            <span class="text-text-secondary">Objetivo: {{ user.mission || 'Padre Imparable' }}</span>
+            <span class="text-white font-bold">4%</span>
           </div>
-          <div class="w-full bg-gray-700 rounded-full h-2.5">
-            <div class="bg-orange-500 h-2.5 rounded-full" style="width: 4%"></div>
+          <div class="w-full bg-[#222] rounded-full h-2">
+            <div class="bg-accent-primary/60 h-2 rounded-full" style="width: 4%"></div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Rewards Section -->
     <section class="px-4 mt-4">
-      <div class="bg-gray-800/50 backdrop-blur-md rounded-xl p-5 border border-gray-700">
-        <h3 class="text-sm font-bold text-yellow-500 mb-4 flex items-center">
-          🏆 Tus Premios
+      <div class="bg-surface rounded-[16px] p-6 border border-[#333]">
+        <h3 class="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-accent-primary">emoji_events</span>
+          Tus Premios
         </h3>
-        <div class="flex items-center space-x-4">
-          <div class="bg-orange-900/50 p-3 rounded-full border border-orange-500/30">
+        <div class="flex items-center gap-4">
+          <div class="bg-[#222] p-3 rounded-full border border-[#333] text-2xl">
              👕
           </div>
           <div class="flex-1">
-             <p class="text-xs text-gray-300">Camiseta del Equipo: <span class="text-gray-500">6 meses</span></p>
-             <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
-                <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 30%"></div>
+             <div class="flex justify-between items-center mb-2">
+               <p class="text-sm font-bold text-white">Camiseta del Equipo</p>
+               <span class="text-xs text-text-secondary">6 meses</span>
+             </div>
+             <div class="w-full bg-[#222] rounded-full h-1.5">
+                <div class="bg-accent-primary h-1.5 rounded-full" style="width: 30%"></div>
              </div>
           </div>
         </div>
       </div>
     </section>
-
-    <nav class="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800 pb-6 pt-3 px-6 flex justify-between items-center z-50 hidden">
-      <!-- Duplicate nav removed/hidden to avoid conflict with AppLayout -->
-    </nav>
   </div>
 </template>
 
 <style scoped>
-/* Add custom scrollbar hiding or specific transition utilities here */
 .animate-pulse-slow {
   animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

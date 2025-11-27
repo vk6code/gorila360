@@ -6,23 +6,23 @@
     </div>
 
     <!-- Barra de Navegación Fija Abajo -->
-    <nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around border-t border-[#35332c] bg-[#1A1A1A] px-2 py-2">
+    <nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around border-t border-[#333] bg-[#141414] px-2 py-2">
       <div class="flex w-full justify-between">
         <button
           v-for="(tab, index) in tabs"
           :key="index"
           @click="goTo(tab.name)"
           class="relative flex flex-1 flex-col items-center justify-center gap-1 pt-1 pb-2 transition-all duration-200 ease-in-out active:scale-95"
-          :class="$route.name === tab.name ? 'text-accent-primary' : 'text-text-secondary/70'"
+          :class="$route.name === tab.name ? 'text-accent-primary' : 'text-text-secondary hover:text-white'"
         >
           <div
-            class="absolute top-0 h-0.5 w-8 rounded-full bg-accent-primary transition-all duration-300"
+            class="absolute top-0 h-0.5 w-8 rounded-full bg-accent-primary shadow-gold-glow transition-all duration-300"
             :class="$route.name === tab.name ? 'opacity-100' : 'opacity-0'"
           ></div>
-          <span class="material-symbols-outlined text-2xl">
+          <span class="material-symbols-outlined text-2xl" :class="{ 'font-bold': $route.name === tab.name }">
             {{ tab.icon }}
           </span>
-          <p class="text-xs font-medium leading-normal tracking-[0.015em]">{{ tab.label }}</p>
+          <p class="text-[10px] font-bold uppercase tracking-widest">{{ tab.label }}</p>
         </button>
       </div>
     </nav>
