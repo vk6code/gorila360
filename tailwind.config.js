@@ -7,11 +7,12 @@ export default {
       // Tokens de Color
       colors: {
         'background-primary': '#0E0E0E', // Charcoal Black
-        'accent-primary': '#C7A64F',     // Matte Gold (Renombrado desde 'primary')
-        'text-primary': '#FFFFFF',         // White
-        'text-secondary': '#5A5A5A',      // Steel Gray
-        'feedback-positive': '#C7A64F',    // Matte Gold
-        'feedback-negative': '#B94E4E',    // Faint Red
+        'surface': '#141414',            // Card/Surface
+        'accent-primary': '#C7A64F',     // Matte Gold
+        'text-primary': '#FFFFFF',       // White
+        'text-secondary': '#5A5A5A',     // Steel Gray
+        'feedback-positive': '#C7A64F',  // Matte Gold (Consistency)
+        'feedback-negative': '#B94E4E',  // Faint Red
       },
       // Tokens de Tipografía
       fontSize: {
@@ -44,6 +45,7 @@ export default {
       },
       boxShadow: {
         'button-glow': '0 0 15px rgba(199, 166, 79, 0.4)',
+        'gold-glow': '0 0 15px rgba(199, 166, 79, 0.4)',
       },
       // Tokens de Movimiento y Animación
       transitionDuration: {
