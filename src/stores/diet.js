@@ -68,31 +68,93 @@ export const useDietStore = defineStore('diet', () => {
     return dietPlan.value.meals.flatMap(meal => meal.foods);
   });
 
+  // State for tracking consumption
+  const consumedMacros = ref({ fats: 0, carbs: 0, proteins: 0 });
+  const checkedFoodIds = ref(new Set());
+
+  // Mock Daily Targets (Should come from API)
+  const dailyTargets = ref({
+    fats: 70,
+    carbs: 250,
+    proteins: 180
+  });
+
+  // Actions
+  function toggleFood(foodItem) {
+    // Generate a unique ID for the item if it doesn't have one, or use a combination of name/amount
+    const id = foodItem.id || `${foodItem.name}-${foodItem.amount}`;
+
+    if (checkedFoodIds.value.has(id)) {
+      // Uncheck: Subtract macros
+      checkedFoodIds.value.delete(id);
+      consumedMacros.value.fats -= foodItem.fats || 0;
+      consumedMacros.value.carbs -= foodItem.carbs || 0;
+      consumedMacros.value.proteins -= foodItem.proteins || 0;
+    } else {
+      // Check: Add macros
+      checkedFoodIds.value.add(id);
+      consumedMacros.value.fats += foodItem.fats || 0;
+      consumedMacros.value.carbs += foodItem.carbs || 0;
+      consumedMacros.value.proteins += foodItem.proteins || 0;
+    }
+  }
+
+  // Computed
+  const remainingMacros = computed(() => {
+    const targets = dailyTargets.value || { fats: 70, carbs: 250, proteins: 180 };
+    return {
+      fats: Math.max(0, targets.fats - consumedMacros.value.fats),
+      carbs: Math.max(0, targets.carbs - consumedMacros.value.carbs),
+      proteins: Math.max(0, targets.proteins - consumedMacros.value.proteins)
+    };
+  });
+
+  // Helper to map food items with macros
+  const mapFoodWithMacros = (items) => items.map(item => ({
+    id: item.id || `${item.food.name}-${item.amount}`,
+    name: item.food.name,
+    amount: `${item.amount} ${item.unit}`,
+    fats: item.food.fatsG || 0,
+    carbs: item.food.carbsG || 0,
+    proteins: item.food.proteinsG || 0,
+    isFixed: item.isFixed || false
+  }));
+
   const fatsPlanned = computed(() => {
-    return allFoods.value
-      .filter(item => item.food && item.food.fatsG > 5)
-      .map(item => ({
-        name: item.food.name,
-        amount: `${item.amount} ${item.unit}`
-      }));
+    return mapFoodWithMacros(allFoods.value.filter(item => item.food && item.food.fatsG > 5));
   });
 
   const carbsPlanned = computed(() => {
-    return allFoods.value
-      .filter(item => item.food && item.food.carbsG > 10)
-      .map(item => ({
-        name: item.food.name,
-        amount: `${item.amount} ${item.unit}`
-      }));
+    return mapFoodWithMacros(allFoods.value.filter(item => item.food && item.food.carbsG > 10));
   });
 
   const proteinsPlanned = computed(() => {
-    return allFoods.value
-      .filter(item => item.food && item.food.proteinsG > 5)
-      .map(item => ({
-        name: item.food.name,
-        amount: `${item.amount} ${item.unit}`
-      }));
+    return mapFoodWithMacros(allFoods.value.filter(item => item.food && item.food.proteinsG > 5));
+  });
+
+  const fixedFoods = computed(() => {
+    // Mocking Fixed Foods logic
+    const fixed = allFoods.value.filter(item =>
+      item.food && (item.food.name.toLowerCase().includes('batido') || item.food.name.toLowerCase().includes('creatina') || Math.random() > 0.8)
+    );
+    return mapFoodWithMacros(fixed).map(f => ({ ...f, isFixed: true }));
+  });
+
+  const recipes = computed(() => [
+    { id: 1, name: 'Pollo al Curry con Arroz Basmati' },
+    { id: 2, name: 'Tortilla de Claras con Avena' },
+    { id: 3, name: 'Batido de Proteínas Post-Entreno' },
+    { id: 4, name: 'Ensalada de Atún y Aguacate' }
+  ]);
+
+  const macrosDistribution = computed(() => {
+    // Use daily targets for the chart distribution instead of just planned foods
+    const total = dailyTargets.value.fats + dailyTargets.value.carbs + dailyTargets.value.proteins;
+    return {
+      fats: total ? Math.round((dailyTargets.value.fats / total) * 100) : 30,
+      carbs: total ? Math.round((dailyTargets.value.carbs / total) * 100) : 40,
+      proteins: total ? Math.round((dailyTargets.value.proteins / total) * 100) : 30,
+    };
   });
 
   return {
@@ -104,45 +166,13 @@ export const useDietStore = defineStore('diet', () => {
     fatsPlanned,
     carbsPlanned,
     proteinsPlanned,
-
-    // New Computed Properties for Updated View
-    fixedFoods: computed(() => {
-      // TODO: Backend integration needed.
-      // Currently mocking "Fixed" status based on specific food names or random assignment for demo.
-      // In production, check for `item.isFixed` property from API.
-      return allFoods.value
-        .filter(item => item.food && (item.food.name.toLowerCase().includes('batido') || item.food.name.toLowerCase().includes('creatina') || Math.random() > 0.8))
-        .map(item => ({
-          name: item.food.name,
-          amount: `${item.amount} ${item.unit}`,
-          isFixed: true
-        }));
-    }),
-
-    recipes: computed(() => {
-      // TODO: Backend integration needed.
-      // Mocking recipes list.
-      return [
-        { id: 1, name: 'Pollo al Curry con Arroz Basmati' },
-        { id: 2, name: 'Tortilla de Claras con Avena' },
-        { id: 3, name: 'Batido de Proteínas Post-Entreno' },
-        { id: 4, name: 'Ensalada de Atún y Aguacate' }
-      ];
-    }),
-
-    macrosDistribution: computed(() => {
-      // Calculate total macros from planned foods
-      // This is an approximation based on the lists
-      const totalFats = allFoods.value.reduce((acc, item) => acc + (item.food?.fatsG || 0), 0);
-      const totalCarbs = allFoods.value.reduce((acc, item) => acc + (item.food?.carbsG || 0), 0);
-      const totalProteins = allFoods.value.reduce((acc, item) => acc + (item.food?.proteinsG || 0), 0);
-      const total = totalFats + totalCarbs + totalProteins;
-
-      return {
-        fats: total ? Math.round((totalFats / total) * 100) : 30,
-        carbs: total ? Math.round((totalCarbs / total) * 100) : 40,
-        proteins: total ? Math.round((totalProteins / total) * 100) : 30,
-      };
-    })
+    fixedFoods,
+    recipes,
+    macrosDistribution,
+    dailyTargets,
+    consumedMacros,
+    remainingMacros,
+    checkedFoodIds,
+    toggleFood
   };
 });
