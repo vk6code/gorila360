@@ -103,6 +103,46 @@ export const useDietStore = defineStore('diet', () => {
     sync,
     fatsPlanned,
     carbsPlanned,
-    proteinsPlanned
+    proteinsPlanned,
+
+    // New Computed Properties for Updated View
+    fixedFoods: computed(() => {
+      // TODO: Backend integration needed.
+      // Currently mocking "Fixed" status based on specific food names or random assignment for demo.
+      // In production, check for `item.isFixed` property from API.
+      return allFoods.value
+        .filter(item => item.food && (item.food.name.toLowerCase().includes('batido') || item.food.name.toLowerCase().includes('creatina') || Math.random() > 0.8))
+        .map(item => ({
+          name: item.food.name,
+          amount: `${item.amount} ${item.unit}`,
+          isFixed: true
+        }));
+    }),
+
+    recipes: computed(() => {
+      // TODO: Backend integration needed.
+      // Mocking recipes list.
+      return [
+        { id: 1, name: 'Pollo al Curry con Arroz Basmati' },
+        { id: 2, name: 'Tortilla de Claras con Avena' },
+        { id: 3, name: 'Batido de Proteínas Post-Entreno' },
+        { id: 4, name: 'Ensalada de Atún y Aguacate' }
+      ];
+    }),
+
+    macrosDistribution: computed(() => {
+      // Calculate total macros from planned foods
+      // This is an approximation based on the lists
+      const totalFats = allFoods.value.reduce((acc, item) => acc + (item.food?.fatsG || 0), 0);
+      const totalCarbs = allFoods.value.reduce((acc, item) => acc + (item.food?.carbsG || 0), 0);
+      const totalProteins = allFoods.value.reduce((acc, item) => acc + (item.food?.proteinsG || 0), 0);
+      const total = totalFats + totalCarbs + totalProteins;
+
+      return {
+        fats: total ? Math.round((totalFats / total) * 100) : 30,
+        carbs: total ? Math.round((totalCarbs / total) * 100) : 40,
+        proteins: total ? Math.round((totalProteins / total) * 100) : 30,
+      };
+    })
   };
 });
