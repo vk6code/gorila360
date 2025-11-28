@@ -6,6 +6,8 @@ const props = defineProps({
   columns: { type: Array, required: true }, // { key: 'name', label: 'Nombre' }
 })
 
+const emit = defineEmits(["row-click"])
+
 const search = ref("")
 const sortKey = ref("")
 const sortAsc = ref(true)
@@ -45,6 +47,10 @@ function sort(col) {
     sortAsc.value = true
   }
 }
+
+function onRowClick(row, index) {
+  emit("row-click", { row, index })
+}
 </script>
 
 <template>
@@ -80,6 +86,7 @@ function sort(col) {
           v-for="(row, i) in paginated"
           :key="i"
           class="border-b hover:bg-gray-700"
+          @click="onRowClick(row, i)"
         >
           <td v-for="col in columns" :key="col.key" class="py-2 px-3">
             {{ row[col.key] }}

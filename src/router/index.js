@@ -17,7 +17,7 @@ import AdminRoutineExercisesView from '../views/AdminRoutineExercises.vue'
 import AdminUsersCalendarView from '../views/AdminUserCalendar.vue'
 import AdminRoutineExercisesExercisesView from '../views/AdminRoutineExercisesExercises.vue'
 import AdminRoutineExercisesWorkoutsView from '../views/AdminRoutineExercisesWorkouts.vue'
-
+import AdminUsersUserDetailView from '../views/UserDetail.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -66,6 +66,11 @@ const routes = [
         component: AdminUsersView,
       },
       {
+        path: 'usuario/:usuario/detalle',
+        name: 'admin-usuarios-usuario-detalle',
+        component: AdminUsersUserDetailView
+      },
+      {
         path: 'planes',
         name: 'admin-planes',
         component: AdminPlansView
@@ -82,14 +87,11 @@ const routes = [
         component: AdminUsersCalendarView
       },
       {
-        path: 'rutinas/ejercicios',
+        path: 'rutinas',
         name: 'admin-rutinas-ejercicios',
         component: AdminRoutineExercisesView,
+        redirect: '/rutinas/ejercicios', // Redirige a dashboard por defecto
         children: [
-          { 
-            path: '', 
-            redirect: 'rutinas/ejercicios/ejercicios' 
-          },
           {
             path: 'ejercicios',
             name: 'admin-ejercicios-ejercicios',

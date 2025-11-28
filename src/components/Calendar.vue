@@ -33,7 +33,7 @@
 
         <div class="flex items-start justify-between mb-2">
           <div class="text-xs font-medium text-black">{{ format(day, 'd') }}</div>
-          <button @click="onDayCreate(day)" class="text-xs text-gray-400 hover:text-gray-600">+</button>
+          <button @click="onDayCreate(day)" class="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">+</button>
         </div>
 
         <div class="flex-1 overflow-hidden">

@@ -1,10 +1,31 @@
 <template>
   <Calendar v-model="visibleDate" :events="events" @create-event="createEvent" @event-click="openEvent" />
+
+    <ModalComponent v-model="showModal" :title="selectedDate">
+      <p> Añadir Evento </p>
+      <template #footer>
+        <button @click="showModal = false">Cerrar</button>
+        <!-- <button @click="confirmar">Confirmar</button> -->
+      </template>
+    </ModalComponent>
+
+    <ModalComponent v-model="showModalEvento" :title="selectedDate">
+      <p> Ver Evento</p>
+      <template #footer>
+        <button @click="showModalEvento = false">Cerrar</button>
+        <!-- <button @click="confirmar">Confirmar</button> -->
+      </template>
+    </ModalComponent>
 </template>
 
 <script setup>
 import Calendar from '@/components/Calendar.vue'
+import ModalComponent  from "@/components/Modal.vue"
 import { ref } from 'vue'
+
+const selectedDate = ref()
+const showModal = ref(false)
+const showModalEvento = ref(false)
 
 const visibleDate = ref(new Date().toISOString().slice(0,10))
 const events = ref([
@@ -17,6 +38,34 @@ const events = ref([
   { id: 7, title: 'Entrega', start: '2025-11-28T09:00:00' }
 ])
 
-function createEvent(isoDate) { /* abre modal y crea evento */ }
-function openEvent(payload) { /* payload */ }
+function createEvent(isoDate) { 
+  selectedDate.value = formatFecha(isoDate);
+  showModal.value = true
+}
+function openEvent(payload) { 
+  selectedDate.value = formatFecha(payload.day);
+  showModalEvento.value = true
+}
+
+function formatFecha(fecha) {
+  const date = new Date(fecha) // recibe "YYYY-MM-DD"
+
+  const opciones = {
+    day: "numeric",
+    month: "long",
+  }
+
+  // Día + mes en español
+  let formateado = new Intl.DateTimeFormat("es-ES", opciones).format(date)
+
+  const partes = formateado.split(" de ")
+
+  const dia = partes[0]        // "30"
+  const mes = partes[1]        // "octubre"
+
+  // Capitalizar solo el mes
+  const mesCapitalizado = mes.charAt(0).toUpperCase() + mes.slice(1)
+
+  return `${dia} de ${mesCapitalizado}`
+}
 </script>

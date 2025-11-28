@@ -1,10 +1,27 @@
 <template>
   <h2 class="text-3xl font-bold">Alumnos</h2>
-  <DataTable :items="items" :columns="columns" class="mt-4" />
+  <DataTable :items="items" :columns="columns" @row-click="rowClicked" class="mt-4" />
+
+  <ModalComponent v-model="showModal" title="Detalles del alumno">
+    <p>{{ userName }}</p>
+    <p>{{ userAge }}</p>
+    <p>{{ userCity }}</p>
+    <template #footer>
+      <button @click="showModal = false">Cerrar</button>
+      <!-- <button @click="confirmar">Confirmar</button> -->
+    </template>
+  </ModalComponent>
 </template>
 
 <script setup>
 import DataTable from "../components/DataTable.vue"
+import ModalComponent  from "../components/Modal.vue"
+import { ref } from 'vue'
+
+const showModal = ref(false)
+const userName = ref('')
+const userAge = ref('')
+const userCity = ref('')
 
 const columns = [
   { key: "name", label: "Nombre" },
@@ -20,4 +37,12 @@ const items = [
   { name: "Carlos", age: 40, city: "Barcelona", lastTraining: "5 días" },
   { name: "Carlos", age: 40, city: "Barcelona", lastTraining: "Hoy" },
 ]
+
+function rowClicked(event)
+{
+    userName.value = event.row.name
+    userAge.value = event.row.age
+    userCity.value = event.row.city
+    showModal.value = true
+}
 </script>
