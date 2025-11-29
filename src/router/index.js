@@ -49,6 +49,21 @@ const routes = [
         path: 'progress',
         name: 'progress',
         component: ProgressView
+      },
+      {
+        path: 'calendar/month',
+        name: 'student-calendar',
+        component: StudentCalendarView
+      },
+      {
+        path: 'calendar/week',
+        name: 'calendar-week',
+        component: StudentCalendarWeekView
+      },
+      {
+        path: 'calendar/day/:date?',
+        name: 'calendar-day',
+        component: StudentCalendarDayView
       }
     ]
   },
@@ -101,25 +116,12 @@ const routes = [
             component: AdminRoutineExercisesExercisesView
           },
           {
+            path: 'workouts',
+            name: 'admin-ejercicios-workouts',
             component: AdminRoutineExercisesWorkoutsView
           }
         ]
       },
-      {
-        path: 'calendar/month',
-        name: 'student-calendar',
-        component: StudentCalendarView
-      },
-      {
-        path: 'calendar/week',
-        name: 'calendar-week',
-        component: StudentCalendarWeekView
-      },
-      {
-        path: 'calendar/day/:date?',
-        name: 'calendar-day',
-        component: StudentCalendarDayView
-      }
     ]
   },
   {
