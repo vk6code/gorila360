@@ -193,10 +193,13 @@ const maxEditDate = new Date(today);
 maxEditDate.setDate(today.getDate() + 15);
 
 const isDateEditable = (dateString) => {
-  const d = new Date(dateString);
-  d.setHours(0, 0, 0, 0);
-  // Editable if: date >= today AND date <= today + 15
-  return d >= today && d <= maxEditDate;
+  // Simple string comparison for YYYY-MM-DD to avoid timezone issues
+  const todayStr = new Date().toISOString().split('T')[0];
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 15);
+  const maxDateStr = maxDate.toISOString().split('T')[0];
+
+  return dateString >= todayStr && dateString <= maxDateStr;
 };
 
 const calendarDays = computed(() => {
@@ -229,6 +232,7 @@ const showSelectionModal = ref(false);
 const selectedDay = ref(null);
 
 const onDayClick = (day) => {
+  console.log('Day clicked:', day.date, 'Editable:', day.isEditable);
   if (!day.isEditable) return;
   selectedDay.value = day;
   showSelectionModal.value = true;

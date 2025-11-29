@@ -141,40 +141,44 @@ const getWeekRange = () => {
 
 const { start: startDate, end: endDate } = getWeekRange();
 
-const { result, loading } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
+const { result } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
   userId: userId.value,
   startDate,
   endDate
 }));
 
 const weekDays = computed(() => {
-  if (loading.value || !result.value?.getUserCalendarRange) {
-    return [];
-  }
-
-  const apiDays = result.value.getUserCalendarRange;
   const weekdaysMap = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
+  const { start } = getWeekRange();
+  const startDateObj = new Date(start);
 
-  return apiDays.map(d => {
-    const dateObj = new Date(d.date);
-    // Lookup defaults for metrics not in this query
-    // Assuming dayType is just "A", "B", etc. from backend, but UI expects "DAY A"
-    // We try to match the "name" in dayTypes array which is "DAY A"
-    const typeCode = d.dayType; // e.g. "A"
-    const typeName = `DAY ${typeCode}`;
-    const typeInfo = dayTypes.find(t => t.name === typeName) || { calories: '???', steps: '???', name: typeName };
+  const days = [];
+  const apiDays = result.value?.getUserCalendarRange || [];
 
-    return {
-      weekday: weekdaysMap[dateObj.getDay()],
-      day: dateObj.getDate(),
-      date: d.date,
+  for (let i = 0; i < 7; i++) {
+    const current = new Date(startDateObj);
+    current.setDate(startDateObj.getDate() + i);
+    const dateString = current.toISOString().split('T')[0];
+
+    // Find API data for this day
+    const d = apiDays.find(apiDay => apiDay.date === dateString) || {};
+
+    const typeCode = d.dayType || 'REST'; // Default to REST if no data
+    const typeName = d.dayType ? `DAY ${d.dayType}` : 'DESCANSO';
+    const typeInfo = dayTypes.find(t => t.name === typeName) || { calories: 0, steps: 0, name: typeName };
+
+    days.push({
+      weekday: weekdaysMap[current.getDay()],
+      day: current.getDate(),
+      date: dateString,
       dayType: typeName,
-      color: d.dayTypeColor || typeInfo.color || '#5A5A5A', // Use API color or fallback
-      calories: `${typeInfo.calories} kcal`,
-      steps: `${typeInfo.steps} pasos`,
-      focus: getFocusForType(typeCode), // Helper to mock focus
-    };
-  });
+      color: d.dayTypeColor || typeInfo.color || '#333333',
+      calories: `${typeInfo.calories || 0} kcal`,
+      steps: `${typeInfo.steps || 0} pasos`,
+      focus: getFocusForType(typeCode),
+    });
+  }
+  return days;
 });
 
 const getFocusForType = (type) => {
