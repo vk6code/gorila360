@@ -103,6 +103,7 @@ import { useQuery, useMutation } from '@vue/apollo-composable';
 import { GET_USER_CALENDAR_RANGE, UPDATE_DAILY_PLAN } from '@/graphql/calendar';
 
 const auth = useAuth();
+console.log('StudentCalendarEdit mounted. Auth User:', auth.user.value);
 // Fallback to ID 1 (Victor) if no auth user found (for guest/mock mode)
 const userId = computed(() => auth.user?.id || 1);
 
