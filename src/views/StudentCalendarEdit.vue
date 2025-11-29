@@ -246,8 +246,25 @@ const calendarDays = computed(() => {
 
 const generatePlaceholderDays = () => {
   const days = [];
-  for (let i = 1; i <= 42; i++) {
-     days.push({ day: i, date: `placeholder-${i}`, isCurrentMonth: true, isEditable: false });
+  const date = currentMonth.value;
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const start = new Date(year, month, 1);
+
+  // Generate 42 days starting from the 1st of the month
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    const dateString = d.toISOString().split('T')[0];
+
+    days.push({
+      day: d.getDate(),
+      date: dateString,
+      isCurrentMonth: d.getMonth() === month,
+      dayType: null,
+      isToday: dateString === new Date().toLocaleDateString('en-CA'),
+      isEditable: true // Allow editing even if API failed, so we can try to save
+    });
   }
   return days;
 };
