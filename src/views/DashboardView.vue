@@ -86,6 +86,42 @@ const startWorkout = () => {
       </div>
     </section>
 
+    <!-- Plan Your Week Section -->
+    <section class="px-4 mb-8">
+      <div
+        @click="$router.push({ name: 'student-calendar' })"
+        class="relative overflow-hidden rounded-[16px] bg-surface border border-[#333] shadow-lg p-6 text-center h-64 flex flex-col justify-center items-center group cursor-pointer"
+      >
+        <!-- Background Image/Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0">
+           <div class="w-full h-full bg-[#1a1a1a] opacity-50"></div>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center">
+          <div class="mb-4">
+            <span class="text-4xl mb-2 block">📅</span>
+            <h2 class="text-heading-lg font-bold leading-none text-white">
+              PLANIFICA <br/>
+              <span class="text-accent-primary">
+                TU SEMANA
+              </span>
+            </h2>
+          </div>
+
+          <div
+            class="mt-2 flex flex-col items-center transition-transform transform group-hover:scale-105 active:scale-95"
+          >
+            <div class="w-16 h-16 rounded-full bg-accent-primary text-black flex items-center justify-center shadow-gold-glow mb-3">
+              <span class="material-symbols-outlined text-4xl">calendar_month</span>
+            </div>
+            <span class="text-xs font-bold tracking-widest uppercase text-accent-primary">
+              Ver Calendario
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Stats Section -->
     <section class="px-4 space-y-4">
       <div class="bg-surface rounded-[16px] p-6 border border-[#333]">

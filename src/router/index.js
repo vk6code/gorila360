@@ -18,6 +18,7 @@ import AdminUsersCalendarView from '../views/AdminUserCalendar.vue'
 import AdminRoutineExercisesExercisesView from '../views/AdminRoutineExercisesExercises.vue'
 import AdminRoutineExercisesWorkoutsView from '../views/AdminRoutineExercisesWorkouts.vue'
 import AdminUsersUserDetailView from '../views/UserDetail.vue'
+import StudentCalendarView from '../views/StudentCalendar.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -121,6 +122,11 @@ const routes = [
     path: '/weekly-planner',
     name: 'weekly-planner',
     component: WeeklyPlannerView
+  },
+  {
+    path: '/student-calendar',
+    name: 'student-calendar',
+    component: StudentCalendarView
   }
 ]
 
