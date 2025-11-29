@@ -17,9 +17,15 @@
       </button>
     </div>
 
-    <!-- Month Navigation (Placeholder for full 2025-2026 support) -->
+    <!-- Month Navigation -->
     <div class="px-4 py-2 flex items-center justify-center gap-4">
-       <span class="text-white font-bold uppercase">{{ currentMonthLabel }}</span>
+       <button @click="prevMonth" class="text-white hover:text-[#C7A64F] transition-colors">
+         <ChevronLeft class="w-6 h-6" />
+       </button>
+       <span class="text-white font-bold uppercase min-w-[150px] text-center">{{ currentMonthLabel }}</span>
+       <button @click="nextMonth" class="text-white hover:text-[#C7A64F] transition-colors">
+         <ChevronRight class="w-6 h-6" />
+       </button>
     </div>
 
     <!-- Calendar Grid -->
@@ -128,7 +134,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { ArrowLeft } from 'lucide-vue-next';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { useAuth } from '@/stores/auth';
 import { useQuery, useMutation } from '@vue/apollo-composable';
 import { GET_USER_CALENDAR_RANGE, UPDATE_DAILY_PLAN } from '@/graphql/calendar';
@@ -155,16 +161,35 @@ const getDayTypeColor = (code) => {
   return type ? type.colorClass : 'bg-[#5A5A5A]';
 };
 
+// Month Navigation
+const currentMonth = ref(new Date());
+
 const currentMonthLabel = computed(() => {
-  return new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+  return currentMonth.value.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
 });
 
-// Calendar Data: Dynamic Range (Start from beginning of current month or slightly before)
-const getCalendarRange = () => {
-  const now = new Date();
-  // Start from the 1st of the current month
-  const start = new Date(now.getFullYear(), now.getMonth(), 1);
-  // End 6 weeks later to fill grid
+const prevMonth = () => {
+  const newDate = new Date(currentMonth.value);
+  newDate.setMonth(newDate.getMonth() - 1);
+  currentMonth.value = newDate;
+};
+
+const nextMonth = () => {
+  const newDate = new Date(currentMonth.value);
+  newDate.setMonth(newDate.getMonth() + 1);
+  currentMonth.value = newDate;
+};
+
+// Calendar Data: Dynamic Range based on currentMonth
+const calendarRange = computed(() => {
+  const date = currentMonth.value;
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  // Start from the 1st of the selected month
+  const start = new Date(year, month, 1);
+  // End at the last day of the month (or fixed 6 weeks for grid)
+  // Let's do a full 6-week grid to be safe and consistent
   const end = new Date(start);
   end.setDate(end.getDate() + 42);
 
@@ -172,53 +197,51 @@ const getCalendarRange = () => {
     start: start.toISOString().split('T')[0],
     end: end.toISOString().split('T')[0]
   };
-};
-
-const { start: startDate, end: endDate } = getCalendarRange();
+});
 
 // Only query if we have a user ID
-const { result, loading, refetch } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
+const { result, loading, error, refetch } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
   userId: userId.value,
-  startDate,
-  endDate
+  startDate: calendarRange.value.start,
+  endDate: calendarRange.value.end
 }));
 
 // Local state for optimistic updates
 const localUpdates = ref({});
 
 // Date Helpers
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-const maxEditDate = new Date(today);
-maxEditDate.setDate(today.getDate() + 15);
-
 const isDateEditable = (dateString) => {
-  // Use local time for "Today" to avoid timezone issues (UTC vs Local)
-  // 'en-CA' locale gives YYYY-MM-DD format
-  const todayStr = new Date().toLocaleDateString('en-CA');
-
-  const maxDate = new Date();
-  maxDate.setDate(maxDate.getDate() + 15);
-  const maxDateStr = maxDate.toLocaleDateString('en-CA');
-
-  return dateString >= todayStr && dateString <= maxDateStr;
+  if (!dateString || dateString.startsWith('placeholder')) return false;
+  // Allow editing any valid date for now as requested
+  return true;
 };
 
 const calendarDays = computed(() => {
+  console.log('API Result:', result.value);
+  console.log('API Error:', error.value);
+  console.log('Loading:', loading.value);
+
   if (loading.value || !result.value?.getUserCalendarRange) {
     return generatePlaceholderDays();
   }
 
   const apiDays = result.value.getUserCalendarRange;
+  console.log('API Days received:', apiDays.length);
 
-  return apiDays.map(d => ({
-    day: new Date(d.date).getDate(),
-    date: d.date,
-    isCurrentMonth: new Date(d.date).getMonth() === new Date().getMonth(),
-    dayType: localUpdates.value[d.date] || d.dayType,
-    isToday: d.isToday,
-    isEditable: isDateEditable(d.date)
-  }));
+  return apiDays.map(d => {
+    const isEditable = isDateEditable(d.date);
+    // Debug log for first few days
+    if (d.date.endsWith('01')) console.log(`Date: ${d.date}, Editable: ${isEditable}`);
+
+    return {
+      day: new Date(d.date).getDate(),
+      date: d.date,
+      isCurrentMonth: new Date(d.date).getMonth() === currentMonth.value.getMonth(),
+      dayType: localUpdates.value[d.date] || d.dayType,
+      isToday: d.isToday,
+      isEditable: isEditable
+    };
+  });
 });
 
 const generatePlaceholderDays = () => {
