@@ -248,11 +248,21 @@ const dayData = computed(() => {
 
 // Dynamic Step Targets
 const stepsTarget = computed(() => {
-  // 20k for REST, 15k for others (Training)
+  // Use backend target if available, otherwise fallback to defaults
+  if (dayData.value.steps) return dayData.value.steps;
+
+  // Fallbacks
   if (dayData.value.dayType === 'REST') {
     return 20000;
   }
   return 15000;
+});
+
+// Debug Data
+watch(dayData, (newVal) => {
+  console.log('Day Data Updated:', newVal);
+  console.log('Steps Done:', newVal.stepsDone);
+  console.log('Steps Target:', stepsTarget.value);
 });
 
 // Edit State
