@@ -65,18 +65,7 @@
             </div>
           </div>
 
-          <!-- Calories Input -->
-          <div>
-            <label class="block text-xs uppercase text-[#5A5A5A] mb-2">Calorías Consumidas</label>
-            <div class="flex items-center gap-3">
-               <input
-                v-model.number="editCalories"
-                type="number"
-                class="flex-1 bg-[#0E0E0E] border border-[#333333] rounded-xl p-3 text-white focus:border-[#C7A64F] outline-none"
-              />
-              <span class="text-xs text-[#5A5A5A]">Meta: {{ dayData.calories }}</span>
-            </div>
-          </div>
+
 
           <button
             @click="saveChanges"
@@ -260,7 +249,6 @@ const stepsTarget = computed(() => {
 // Edit State
 const isEditing = ref(false);
 const editSteps = ref(0);
-const editCalories = ref(0);
 const editDayType = ref('A');
 const dayTypes = ['A', 'B', 'C', 'D', 'REST'];
 
@@ -268,7 +256,6 @@ const dayTypes = ['A', 'B', 'C', 'D', 'REST'];
 watch(dayData, (newVal) => {
   if (newVal) {
     editSteps.value = newVal.stepsDone || 0;
-    editCalories.value = newVal.caloriesDone || 0;
     editDayType.value = newVal.dayType || 'A';
   }
 }, { immediate: true });
@@ -288,7 +275,7 @@ const saveChanges = async () => {
       input: {
         dayTypeId: editDayType.value,
         stepsDone: editSteps.value,
-        caloriesDone: editCalories.value
+        // caloriesDone is not updated here, it comes from diet logs
       }
     });
     isEditing.value = false;
