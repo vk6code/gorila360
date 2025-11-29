@@ -145,6 +145,7 @@ import {
   Utensils,
 } from 'lucide-vue-next';
 
+const auth = useAuth();
 const route = useRoute();
 const router = useRouter();
 
@@ -161,32 +162,30 @@ const formattedDate = computed(() => {
   });
 });
 
-const auth = useAuth();
-const user = computed(() => auth.user || { name: 'Victor' }); // Fallback to Victor for demo
+// GraphQL Query
+import { useQuery } from '@vue/apollo-composable';
+import { GET_USER_DAY_DETAIL } from '@/graphql/calendar';
+
+const dateParam = computed(() => currentDate.value.toISOString().split('T')[0]);
+const userId = computed(() => auth.user?.id || 1); // Fallback to ID 1 if not found
+
+const { result, loading, error } = useQuery(GET_USER_DAY_DETAIL, () => ({
+  userId: userId.value,
+  date: dateParam.value
+}));
 
 const dayData = computed(() => {
-  const name = user.value.name?.toLowerCase() || 'victor';
-  const isEven = currentDate.value.getDate() % 2 === 0;
-
-  if (name.includes('alex')) {
-    // Datos para Alex (Definición/Rendimiento)
+  if (loading.value || error.value || !result.value?.getUserDayDetail) {
+    // Fallback / Loading state placeholder
     return {
-      dayType: isEven ? 'DÍA B' : 'DÍA A',
-      calories: isEven ? '2200' : '2500',
-      steps: isEven ? '15,000' : '12,000',
-      workoutName: isEven ? 'Endurance - Run & Core' : 'Metcon 1 - Full Body',
-      focus: isEven ? 'Cardio y Abdominales' : 'Cuerpo Completo'
-    };
-  } else {
-    // Datos para Victor (Hipertrofia - Default)
-    return {
-      dayType: isEven ? 'DÍA B' : 'DÍA A',
-      calories: isEven ? '3200' : '3000',
-      steps: isEven ? '10,000' : '8,000',
-      workoutName: isEven ? 'RKO 12 – Día B' : 'RKO 11 – Día A',
-      focus: isEven ? 'Enfoque Piernas' : 'Enfoque Pecho y Espalda'
+      dayType: 'Cargando...',
+      calories: '...',
+      steps: '...',
+      workoutName: '...',
+      focus: '...'
     };
   }
+  return result.value.getUserDayDetail;
 });
 
 const navigate = (days) => {
