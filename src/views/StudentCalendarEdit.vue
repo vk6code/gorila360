@@ -103,7 +103,8 @@ import { useQuery, useMutation } from '@vue/apollo-composable';
 import { GET_USER_CALENDAR_RANGE, UPDATE_DAILY_PLAN } from '@/graphql/calendar';
 
 const auth = useAuth();
-const userId = computed(() => auth.user?.id);
+// Fallback to ID 1 (Victor) if no auth user found (for guest/mock mode)
+const userId = computed(() => auth.user?.id || 1);
 
 const weekdays = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'];
 const dayTypes = [
@@ -128,17 +129,12 @@ const { result, loading, refetch } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
   userId: userId.value,
   startDate,
   endDate
-}), {
-  enabled: !!userId.value
-});
+}));
 
 // Local state for optimistic updates
 const localUpdates = ref({});
 
 const calendarDays = computed(() => {
-  if (!userId.value) {
-    return []; // Or handle unauth state
-  }
   if (loading.value || !result.value?.getUserCalendarRange) {
     return generatePlaceholderDays();
   }

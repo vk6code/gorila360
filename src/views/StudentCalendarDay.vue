@@ -1,20 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen bg-[#0E0E0E] pb-20">
-    <!-- Unauthenticated State -->
-    <div v-if="!userId" class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-      <div class="w-16 h-16 rounded-full bg-[#141414] border border-[#333333] flex items-center justify-center mb-4">
-        <span class="material-symbols-outlined text-[#C7A64F] text-2xl">lock</span>
-      </div>
-      <h2 class="text-xl font-bold text-white mb-2">No has iniciado sesión</h2>
-      <p class="text-sm text-[#5A5A5A] mb-6">Inicia sesión para ver tu calendario y registrar tu progreso.</p>
-      <button @click="$router.push({ name: 'login' })" class="px-6 py-3 bg-[#C7A64F] text-black font-bold rounded-xl uppercase tracking-wider">
-        Iniciar Sesión
-      </button>
-    </div>
-
-    <template v-else>
-      <!-- Top Bar -->
-      <div class="px-4 pt-6 pb-4">
+    <!-- Top Bar -->
+    <div class="px-4 pt-6 pb-4">
         <div class="flex items-center justify-between mb-4">
           <button @click="$router.push({ name: 'student-calendar' })" class="w-9 h-9 rounded-full bg-[#141414] border border-[#333333] flex items-center justify-center">
             <ArrowLeft class="w-4 h-4 text-[#FFFFFF]" />
@@ -192,7 +179,6 @@
           </div>
         </div>
       </div>
-    </template>
   </div>
 </template>
 
@@ -235,18 +221,16 @@ const formattedDate = computed(() => {
 });
 
 const dateParam = computed(() => currentDate.value.toISOString().split('T')[0]);
-const userId = computed(() => auth.user?.id);
+// Fallback to ID 1 (Victor) if no auth user found (for guest/mock mode)
+const userId = computed(() => auth.user?.id || 1);
 
 // Query
 const { result, loading, error, refetch } = useQuery(GET_USER_DAY_DETAIL, () => ({
   userId: userId.value,
   date: dateParam.value
-}), {
-  enabled: !!userId.value
-});
+}));
 
 const dayData = computed(() => {
-  if (!userId.value) return {};
   if (loading.value || error.value || !result.value?.getUserDayDetail) {
     return {
       dayType: '...',

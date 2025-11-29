@@ -185,6 +185,6 @@ const generatePlaceholderDays = () => {
   return days;
 };
 const navigateToDay = (date) => {
-  router.push(`/day/${date}`);
+  router.push({ name: 'calendar-day', params: { date } });
 };
 </script>
