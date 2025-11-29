@@ -89,7 +89,8 @@
           <div class="flex items-center justify-center flex-1 py-1">
             <div
               v-if="day.dayType"
-              :class="['w-0.5 h-6 rounded-full', getDayTypeColor(day.dayType)]"
+              class="w-0.5 h-6 rounded-full"
+              :style="{ backgroundColor: day.color || '#5A5A5A' }"
             ></div>
           </div>
           <div class="flex items-center justify-center">
@@ -131,54 +132,58 @@ const workoutIcons = {
   legs: ListChecks,
   fullbody: Sparkles,
 };
-const getDayTypeColor = (type) => {
-  const colors = {
-    'A': 'bg-[#3B82F6]',
-    'B': 'bg-[#EF4444]',
-    'C': 'bg-[#10B981]',
-    'D': 'bg-[#FBBF24]',
-  };
-  return colors[type] || 'bg-[#5A5A5A]';
-};
-const generateCalendarDays = () => {
+import { computed } from 'vue';
+import { useAuth } from '@/stores/auth';
+import { useQuery } from '@vue/apollo-composable';
+import { GET_USER_CALENDAR_RANGE } from '@/graphql/calendar';
+
+const auth = useAuth();
+const userId = computed(() => auth.user?.id || 1);
+
+// Calculate date range for Dec 2025 (Fixed for demo as per template)
+// Start: Dec 1, 2025 (Monday) - No padding needed at start
+// End: Jan 11, 2026 (To fill 42 days grid)
+const startDate = '2025-12-01';
+const endDate = '2026-01-11'; // 6 weeks covers enough
+
+const { result, loading } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
+  userId: userId.value,
+  startDate,
+  endDate
+}));
+
+const calendarDays = computed(() => {
+  if (loading.value || !result.value?.getUserCalendarRange) {
+    // Return empty grid or loading state
+    return generatePlaceholderDays();
+  }
+
+  const apiDays = result.value.getUserCalendarRange;
+  // Map API data to view model
+  // We need to ensure we fill the grid.
+  // If API returns exact range, we just map it.
+
+  return apiDays.map(d => ({
+    day: new Date(d.date).getDate(),
+    date: d.date,
+    isCurrentMonth: new Date(d.date).getMonth() === 11, // Dec
+    dayType: d.dayType,
+    workoutIcon: d.workoutIcon ? workoutIcons[d.workoutIcon] : null,
+    isToday: d.isToday,
+    color: d.dayTypeColor
+  }));
+});
+
+const generatePlaceholderDays = () => {
+   // Keep the old generation for loading state / fallback
   const days = [];
-  const firstDay = new Date(2025, 11, 1);
-  const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-  for (let i = 0; i < startDay; i++) {
-    const prevDate = new Date(2025, 11, -startDay + i + 1);
-    days.push({
-      day: prevDate.getDate(),
-      date: prevDate.toISOString().split('T')[0],
-      isCurrentMonth: false,
-      dayType: null,
-      workoutIcon: null,
-    });
-  }
-  for (let i = 1; i <= 31; i++) {
-    const dayTypes = ['A', 'B', 'C', 'D'];
-    const icons = Object.values(workoutIcons);
-    days.push({
-      day: i,
-      date: `2025-12-${String(i).padStart(2, '0')}`,
-      isCurrentMonth: true,
-      dayType: dayTypes[Math.floor(Math.random() * dayTypes.length)],
-      workoutIcon: icons[Math.floor(Math.random() * icons.length)],
-      isToday: i === new Date().getDate() && new Date().getMonth() === 11 && new Date().getFullYear() === 2025,
-    });
-  }
-  const remainingDays = 42 - days.length;
-  for (let i = 1; i <= remainingDays; i++) {
-    days.push({
-      day: i,
-      date: `2026-01-${String(i).padStart(2, '0')}`,
-      isCurrentMonth: false,
-      dayType: null,
-      workoutIcon: null,
-    });
+
+  // ... simplified placeholder generation
+  for (let i = 1; i <= 42; i++) {
+     days.push({ day: i, date: '', isCurrentMonth: true });
   }
   return days;
 };
-const calendarDays = ref(generateCalendarDays());
 const navigateToDay = (date) => {
   router.push(`/day/${date}`);
 };

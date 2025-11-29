@@ -55,7 +55,7 @@
         <div class="bg-[#141414] border border-[#333333] rounded-2xl p-4">
           <div class="space-y-3">
             <div v-for="dayType in dayTypes" :key="dayType.name" class="flex items-center gap-3">
-              <div :class="['w-3 h-3 rounded-full', dayType.colorClass]"></div>
+              <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: dayType.color }"></div>
               <div class="flex-1">
                 <div class="text-sm font-semibold text-[#FFFFFF]">{{ dayType.name }}</div>
                 <div class="text-xs text-[#5A5A5A]">{{ dayType.calories }} kcal / {{ dayType.steps }} pasos</div>
@@ -80,7 +80,7 @@
             <div class="text-xl font-semibold text-[#FFFFFF]">{{ day.day }}</div>
           </div>
           <!-- Day Type Pill -->
-          <div :class="['rounded-full py-2 px-4 text-center', day.dayTypeColor]">
+          <div class="rounded-full py-2 px-4 text-center" :style="{ backgroundColor: day.color }">
             <span class="text-[11px] font-bold text-[#FFFFFF] uppercase tracking-wide">{{ day.dayType }}</span>
           </div>
           <!-- Metrics -->
@@ -111,111 +111,66 @@ import { ref } from 'vue';
 import { Info, Flame, Footprints, Edit2, Dumbbell } from 'lucide-vue-next';
 const showLegend = ref(false);
 const dayTypes = [
-  { name: 'DAY A', colorClass: 'bg-[#3B82F6]', calories: '3000', steps: '1,000' },
-  { name: 'DAY B', colorClass: 'bg-[#EF4444]', calories: '3000', steps: '2,000' },
-  { name: 'DAY C', colorClass: 'bg-[#10B981]', calories: '2000', steps: '1,000' },
-  { name: 'DAY D', colorClass: 'bg-[#FBBF24]', calories: '4000', steps: '10,000' },
+  { name: 'DAY A', color: '#3B82F6', calories: '3000', steps: '1,000' },
+  { name: 'DAY B', color: '#EF4444', calories: '3000', steps: '2,000' },
+  { name: 'DAY C', color: '#10B981', calories: '2000', steps: '1,000' },
+  { name: 'DAY D', color: '#FBBF24', calories: '4000', steps: '10,000' },
 ];
-const weekDays = ref([
-  {
-    weekday: 'LUN',
-    day: 15,
-    date: '2025-12-15',
-    dayType: 'DAY A',
-    dayTypeColor: 'bg-[#3B82F6]',
-    calories: '3000 kcal',
-    steps: '1,000 pasos',
-    focus: 'Pecho',
-  },
-  {
-    weekday: 'MAR',
-    day: 16,
-    date: '2025-12-16',
-    dayType: 'DAY B',
-    dayTypeColor: 'bg-[#EF4444]',
-    calories: '3000 kcal',
-    steps: '2,000 pasos',
-    focus: 'Espalda',
-  },
-  {
-    weekday: 'MIE',
-    day: 17,
-    date: '2025-12-17',
-    dayType: 'DAY C',
-    dayTypeColor: 'bg-[#10B981]',
-    calories: '2000 kcal',
-    steps: '1,000 pasos',
-    focus: 'Piernas',
-  },
-  {
-    weekday: 'JUE',
-    day: 18,
-    date: '2025-12-18',
-    dayType: 'DAY A',
-    dayTypeColor: 'bg-[#3B82F6]',
-    calories: '3000 kcal',
-    steps: '1,000 pasos',
-    focus: 'Tríceps',
-  },
-  {
-    weekday: 'VIE',
-    day: 19,
-    date: '2025-12-19',
-    dayType: 'DAY D',
-    dayTypeColor: 'bg-[#FBBF24]',
-    calories: '4000 kcal',
-    steps: '10,000 pasos',
-    focus: 'Superior',
-  },
-  {
-    weekday: 'SAB',
-    day: 20,
-    date: '2025-12-20',
-    dayType: 'DAY B',
-    dayTypeColor: 'bg-[#EF4444]',
-    calories: '3000 kcal',
-    steps: '2,000 pasos',
-    focus: 'Cuerpo Completo',
-  },
-  {
-    weekday: 'DOM',
-    day: 21,
-    date: '2025-12-21',
-    dayType: 'DAY C',
-    dayTypeColor: 'bg-[#10B981]',
-    calories: '2000 kcal',
-    steps: '1,000 pasos',
-    focus: 'Pecho',
-  },
-  {
-    weekday: 'LUN',
-    day: 22,
-    date: '2025-12-22',
-    dayType: 'DAY A',
-    dayTypeColor: 'bg-[#3B82F6]',
-    calories: '3000 kcal',
-    steps: '1,000 pasos',
-    focus: 'Espalda',
-  },
-  {
-    weekday: 'MAR',
-    day: 23,
-    date: '2025-12-23',
-    dayType: 'DAY B',
-    dayTypeColor: 'bg-[#EF4444]',
-    calories: '3000 kcal',
-    steps: '2,000 pasos',
-    focus: 'Piernas',
-  },
-  {
-    weekday: 'MIE',
-    day: 24,
-    date: '2025-12-24',
-    dayType: 'DAY D',
-    dayTypeColor: 'bg-[#FBBF24]',
-    calories: '4000 kcal',
-    steps: '10,000 pasos',
-    focus: 'Superior',
-  },
-]);
+import { computed } from 'vue';
+import { useAuth } from '@/stores/auth';
+import { useQuery } from '@vue/apollo-composable';
+import { GET_USER_CALENDAR_RANGE } from '@/graphql/calendar';
+
+const auth = useAuth();
+const userId = computed(() => auth.user?.id || 1);
+
+// Week Range: Dec 15 - Dec 21, 2025
+const startDate = '2025-12-15';
+const endDate = '2025-12-21';
+
+const { result, loading } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
+  userId: userId.value,
+  startDate,
+  endDate
+}));
+
+const weekDays = computed(() => {
+  if (loading.value || !result.value?.getUserCalendarRange) {
+    return [];
+  }
+
+  const apiDays = result.value.getUserCalendarRange;
+  const weekdaysMap = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
+
+  return apiDays.map(d => {
+    const dateObj = new Date(d.date);
+    // Lookup defaults for metrics not in this query
+    // Assuming dayType is just "A", "B", etc. from backend, but UI expects "DAY A"
+    // We try to match the "name" in dayTypes array which is "DAY A"
+    const typeCode = d.dayType; // e.g. "A"
+    const typeName = `DAY ${typeCode}`;
+    const typeInfo = dayTypes.find(t => t.name === typeName) || { calories: '???', steps: '???', name: typeName };
+
+    return {
+      weekday: weekdaysMap[dateObj.getDay()],
+      day: dateObj.getDate(),
+      date: d.date,
+      dayType: typeName,
+      color: d.dayTypeColor || typeInfo.color || '#5A5A5A', // Use API color or fallback
+      calories: `${typeInfo.calories} kcal`,
+      steps: `${typeInfo.steps} pasos`,
+      focus: getFocusForType(typeCode), // Helper to mock focus
+    };
+  });
+});
+
+const getFocusForType = (type) => {
+  const map = {
+    'A': 'Pecho',
+    'B': 'Espalda',
+    'C': 'Piernas',
+    'D': 'Superior'
+  };
+  return map[type] || 'General';
+};
 </script>
