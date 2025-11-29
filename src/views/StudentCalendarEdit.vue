@@ -137,7 +137,7 @@ import { ref, computed } from 'vue';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { useAuth } from '@/stores/auth';
 import { useQuery, useMutation } from '@vue/apollo-composable';
-import { GET_USER_CALENDAR_RANGE, UPDATE_DAILY_PLAN } from '@/graphql/calendar';
+import { GET_USER_CALENDAR_RANGE, BULK_UPDATE_DAILY_PLANS } from '@/graphql/calendar';
 
 const auth = useAuth();
 console.log('StudentCalendarEdit mounted. Auth User:', auth.user.value);
@@ -231,6 +231,8 @@ const calendarDays = computed(() => {
 
   return apiDays.map(d => {
     const isEditable = isDateEditable(d.date);
+    // Handle dayType object or string safely
+    const typeCode = d.dayType?.code || d.dayType;
     // Debug log for first few days
     if (d.date.endsWith('01')) console.log(`Date: ${d.date}, Editable: ${isEditable}`);
 
@@ -238,7 +240,7 @@ const calendarDays = computed(() => {
       day: new Date(d.date).getDate(),
       date: d.date,
       isCurrentMonth: new Date(d.date).getMonth() === currentMonth.value.getMonth(),
-      dayType: localUpdates.value[d.date] || d.dayType,
+      dayType: localUpdates.value[d.date] || typeCode,
       isToday: d.isToday,
       isEditable: isEditable
     };
@@ -378,23 +380,23 @@ const applyUpdate = (date, typeCode) => {
 };
 
 // --- Saving ---
-const { mutate: updatePlan } = useMutation(UPDATE_DAILY_PLAN);
+const { mutate: bulkUpdatePlans } = useMutation(BULK_UPDATE_DAILY_PLANS);
 const isSaving = ref(false);
 
 const saveAllChanges = async () => {
   if (!userId.value) return;
   isSaving.value = true;
 
-  const updates = Object.entries(localUpdates.value);
+  const updates = Object.entries(localUpdates.value).map(([date, typeCode]) => ({
+    date,
+    dayTypeId: typeCode
+  }));
 
   try {
-    await Promise.all(updates.map(([date, typeCode]) =>
-      updatePlan({
-        userId: userId.value,
-        date: date,
-        input: { dayTypeId: typeCode }
-      })
-    ));
+    await bulkUpdatePlans({
+      userId: userId.value,
+      inputs: updates
+    });
 
     // Clear local updates after success
     localUpdates.value = {};

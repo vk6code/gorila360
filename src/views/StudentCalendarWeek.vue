@@ -163,8 +163,9 @@ const weekDays = computed(() => {
     // Find API data for this day
     const d = apiDays.find(apiDay => apiDay.date === dateString) || {};
 
-    const typeCode = d.dayType || 'REST'; // Default to REST if no data
-    const typeName = d.dayType ? `DAY ${d.dayType}` : 'DESCANSO';
+    // Handle dayType object or string safely
+    const typeCode = d.dayType?.code || d.dayType || 'REST';
+    const typeName = typeCode !== 'REST' ? `DAY ${typeCode}` : 'DESCANSO';
     const typeInfo = dayTypes.find(t => t.name === typeName) || { calories: 0, steps: 0, name: typeName };
 
     days.push({

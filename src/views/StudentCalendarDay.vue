@@ -236,7 +236,14 @@ const dayData = computed(() => {
       focus: '...'
     };
   }
-  return result.value.getUserDayDetail;
+  const data = result.value.getUserDayDetail;
+  // Handle dayType object or string safely
+  const typeCode = data.dayType?.code || data.dayType;
+
+  return {
+    ...data,
+    dayType: typeCode
+  };
 });
 
 // Dynamic Step Targets
