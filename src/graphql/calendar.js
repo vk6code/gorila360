@@ -22,10 +22,27 @@ export const GET_USER_DAY_DETAIL = gql`
       steps
       workoutName
       focus
+      caloriesDone
+      stepsDone
       feedback {
         sensation
         recovery
       }
+    }
+  }
+`;
+
+export const UPDATE_DAILY_PLAN = gql`
+  mutation UpdateDailyPlan($userId: ID!, $date: String!, $input: DailyPlanInput!) {
+    updateDailyPlan(userId: $userId, date: $date, input: $input) {
+      date
+      dayType {
+        code
+      }
+      caloriesTarget
+      stepsTarget
+      caloriesDone
+      stepsDone
     }
   }
 `;
