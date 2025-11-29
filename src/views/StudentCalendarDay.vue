@@ -132,6 +132,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuth } from '@/stores/auth';
 import {
   ArrowLeft,
   ChevronLeft,
@@ -160,16 +161,32 @@ const formattedDate = computed(() => {
   });
 });
 
+const auth = useAuth();
+const user = computed(() => auth.user || { name: 'Victor' }); // Fallback to Victor for demo
+
 const dayData = computed(() => {
-  // Mock data based on date (even/odd day logic for variety)
+  const name = user.value.name?.toLowerCase() || 'victor';
   const isEven = currentDate.value.getDate() % 2 === 0;
-  return {
-    dayType: isEven ? 'DÍA B' : 'DÍA A',
-    calories: isEven ? '3200' : '3000',
-    steps: isEven ? '10,000' : '8,000',
-    workoutName: isEven ? 'RKO 12 – Día B' : 'RKO 11 – Día A',
-    focus: isEven ? 'Enfoque Piernas' : 'Enfoque Pecho y Espalda'
-  };
+
+  if (name.includes('alex')) {
+    // Datos para Alex (Definición/Rendimiento)
+    return {
+      dayType: isEven ? 'DÍA B' : 'DÍA A',
+      calories: isEven ? '2200' : '2500',
+      steps: isEven ? '15,000' : '12,000',
+      workoutName: isEven ? 'Endurance - Run & Core' : 'Metcon 1 - Full Body',
+      focus: isEven ? 'Cardio y Abdominales' : 'Cuerpo Completo'
+    };
+  } else {
+    // Datos para Victor (Hipertrofia - Default)
+    return {
+      dayType: isEven ? 'DÍA B' : 'DÍA A',
+      calories: isEven ? '3200' : '3000',
+      steps: isEven ? '10,000' : '8,000',
+      workoutName: isEven ? 'RKO 12 – Día B' : 'RKO 11 – Día A',
+      focus: isEven ? 'Enfoque Piernas' : 'Enfoque Pecho y Espalda'
+    };
+  }
 });
 
 const navigate = (days) => {
