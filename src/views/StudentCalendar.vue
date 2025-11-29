@@ -9,13 +9,13 @@
       <div class="flex items-center justify-between gap-3 mb-3">
         <div class="flex bg-[#141414] rounded-full p-1 flex-1 max-w-xs mx-auto">
           <button
-            @click="$router.push('/day')"
+            @click="$router.push({ name: 'calendar-day' })"
             class="flex-1 px-4 py-2 rounded-full text-xs font-medium text-[#5A5A5A] transition-all"
           >
             Day
           </button>
           <button
-            @click="$router.push('/week')"
+            @click="$router.push({ name: 'calendar-week' })"
             class="flex-1 px-4 py-2 rounded-full text-xs font-medium text-[#5A5A5A] transition-all"
           >
             Week
@@ -105,29 +105,12 @@
     <button class="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-[#C7A64F] shadow-[0_0_20px_rgba(199,166,79,0.5)] flex items-center justify-center">
       <Plus class="w-6 h-6 text-[#000000]" />
     </button>
-    <!-- Bottom Navigation -->
-    <div class="fixed bottom-0 left-0 right-0 bg-[#141414] border-t border-[#333333] px-6 py-4">
-      <div class="flex items-center justify-around">
-        <button class="flex flex-col items-center gap-1" @click="$router.push('/')">
-          <Home class="w-5 h-5 text-[#5A5A5A]" />
-          <span class="text-[10px] text-[#5A5A5A]">Home</span>
-        </button>
-        <button class="flex flex-col items-center gap-1">
-          <Calendar class="w-5 h-5 text-[#C7A64F]" />
-          <span class="text-[10px] text-[#C7A64F]">Calendar</span>
-        </button>
-        <button class="flex flex-col items-center gap-1">
-          <User class="w-5 h-5 text-[#5A5A5A]" />
-          <span class="text-[10px] text-[#5A5A5A]">Profile</span>
-        </button>
-      </div>
-    </div>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Calendar, Home, User, Plus, Edit2, Info } from 'lucide-vue-next';
+import { Plus, Edit2, Info } from 'lucide-vue-next';
 import { Dumbbell, Activity, ListChecks, Sparkles } from 'lucide-vue-next';
 const router = useRouter();
 const showLegend = ref(false);
