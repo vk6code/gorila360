@@ -200,6 +200,7 @@ const calendarRange = computed(() => {
 });
 
 // Only query if we have a user ID
+console.log('Querying Calendar for User ID:', userId.value);
 const { result, loading, error, refetch } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
   userId: userId.value,
   startDate: calendarRange.value.start,
