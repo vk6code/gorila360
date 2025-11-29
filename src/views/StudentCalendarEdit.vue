@@ -193,11 +193,13 @@ const maxEditDate = new Date(today);
 maxEditDate.setDate(today.getDate() + 15);
 
 const isDateEditable = (dateString) => {
-  // Simple string comparison for YYYY-MM-DD to avoid timezone issues
-  const todayStr = new Date().toISOString().split('T')[0];
+  // Use local time for "Today" to avoid timezone issues (UTC vs Local)
+  // 'en-CA' locale gives YYYY-MM-DD format
+  const todayStr = new Date().toLocaleDateString('en-CA');
+
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 15);
-  const maxDateStr = maxDate.toISOString().split('T')[0];
+  const maxDateStr = maxDate.toLocaleDateString('en-CA');
 
   return dateString >= todayStr && dateString <= maxDateStr;
 };
@@ -345,7 +347,6 @@ const saveAllChanges = async () => {
   const updates = Object.entries(localUpdates.value);
 
   try {
-    // Process sequentially for now (or Promise.all)
     await Promise.all(updates.map(([date, typeCode]) =>
       updatePlan({
         userId: userId.value,
@@ -356,10 +357,11 @@ const saveAllChanges = async () => {
 
     // Clear local updates after success
     localUpdates.value = {};
-    refetch();
+    await refetch();
+    alert('Cambios guardados correctamente');
   } catch (e) {
     console.error('Error saving changes:', e);
-    alert('Hubo un error al guardar los cambios.');
+    alert('Hubo un error al guardar los cambios. Revisa la consola.');
   } finally {
     isSaving.value = false;
   }

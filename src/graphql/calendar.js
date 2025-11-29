@@ -36,9 +36,7 @@ export const UPDATE_DAILY_PLAN = gql`
   mutation UpdateDailyPlan($userId: ID!, $date: String!, $input: DailyPlanInput!) {
     updateDailyPlan(userId: $userId, date: $date, input: $input) {
       date
-      dayType {
-        code
-      }
+      dayType
       caloriesTarget
       stepsTarget
       caloriesDone
