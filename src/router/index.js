@@ -64,6 +64,11 @@ const routes = [
         path: 'calendar/day/:date?',
         name: 'calendar-day',
         component: StudentCalendarDayView
+      },
+      {
+        path: 'calendar/edit',
+        name: 'calendar-edit',
+        component: () => import('../views/StudentCalendarEdit.vue')
       }
     ]
   },

@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="px-4 pt-6 pb-4">
       <h1 class="text-center text-sm font-bold uppercase tracking-tight text-[#FFFFFF] mb-4">
-        CALENDAR
+        CALENDARIO
       </h1>
       <!-- Segmented Control + Actions -->
       <div class="flex items-center justify-between gap-3 mb-3">
@@ -12,22 +12,22 @@
             @click="$router.push({ name: 'calendar-day' })"
             class="flex-1 px-4 py-2 rounded-full text-xs font-medium text-[#5A5A5A] transition-all"
           >
-            Day
+            Día
           </button>
           <button
             class="flex-1 px-4 py-2 rounded-full text-xs font-medium bg-[#C7A64F] text-[#000000] shadow-[0_0_15px_rgba(199,166,79,0.4)]"
           >
-            Week
+            Semana
           </button>
           <button
             @click="$router.push({ name: 'student-calendar' })"
             class="flex-1 px-4 py-2 rounded-full text-xs font-medium text-[#5A5A5A] transition-all"
           >
-            Month
+            Mes
           </button>
         </div>
         <div class="flex items-center gap-2">
-          <button class="w-8 h-8 rounded-full bg-[#141414] border border-[#333333] flex items-center justify-center">
+          <button @click="$router.push({ name: 'calendar-edit' })" class="w-8 h-8 rounded-full bg-[#141414] border border-[#333333] flex items-center justify-center">
             <Edit2 class="w-4 h-4 text-[#C7A64F]" />
           </button>
           <button
@@ -39,7 +39,7 @@
         </div>
       </div>
       <h2 class="text-center text-base font-medium text-[#FFFFFF] mb-4">
-        Week Planner
+        Planificador Semanal
       </h2>
     </div>
     <!-- Legend Modal -->
@@ -58,7 +58,7 @@
               <div :class="['w-3 h-3 rounded-full', dayType.colorClass]"></div>
               <div class="flex-1">
                 <div class="text-sm font-semibold text-[#FFFFFF]">{{ dayType.name }}</div>
-                <div class="text-xs text-[#5A5A5A]">{{ dayType.calories }} kcal / {{ dayType.steps }} steps</div>
+                <div class="text-xs text-[#5A5A5A]">{{ dayType.calories }} kcal / {{ dayType.steps }} pasos</div>
               </div>
             </div>
           </div>
@@ -118,104 +118,104 @@ const dayTypes = [
 ];
 const weekDays = ref([
   {
-    weekday: 'MON',
+    weekday: 'LUN',
     day: 15,
     date: '2025-12-15',
     dayType: 'DAY A',
     dayTypeColor: 'bg-[#3B82F6]',
     calories: '3000 kcal',
-    steps: '1,000 steps',
-    focus: 'Chest',
+    steps: '1,000 pasos',
+    focus: 'Pecho',
   },
   {
-    weekday: 'TUE',
+    weekday: 'MAR',
     day: 16,
     date: '2025-12-16',
     dayType: 'DAY B',
     dayTypeColor: 'bg-[#EF4444]',
     calories: '3000 kcal',
-    steps: '2,000 steps',
-    focus: 'Back',
+    steps: '2,000 pasos',
+    focus: 'Espalda',
   },
   {
-    weekday: 'WED',
+    weekday: 'MIE',
     day: 17,
     date: '2025-12-17',
     dayType: 'DAY C',
     dayTypeColor: 'bg-[#10B981]',
     calories: '2000 kcal',
-    steps: '1,000 steps',
-    focus: 'Legs',
+    steps: '1,000 pasos',
+    focus: 'Piernas',
   },
   {
-    weekday: 'THU',
+    weekday: 'JUE',
     day: 18,
     date: '2025-12-18',
     dayType: 'DAY A',
     dayTypeColor: 'bg-[#3B82F6]',
     calories: '3000 kcal',
-    steps: '1,000 steps',
-    focus: 'Triceps',
+    steps: '1,000 pasos',
+    focus: 'Tríceps',
   },
   {
-    weekday: 'FRI',
+    weekday: 'VIE',
     day: 19,
     date: '2025-12-19',
     dayType: 'DAY D',
     dayTypeColor: 'bg-[#FBBF24]',
     calories: '4000 kcal',
-    steps: '10,000 steps',
-    focus: 'Upper',
+    steps: '10,000 pasos',
+    focus: 'Superior',
   },
   {
-    weekday: 'SAT',
+    weekday: 'SAB',
     day: 20,
     date: '2025-12-20',
     dayType: 'DAY B',
     dayTypeColor: 'bg-[#EF4444]',
     calories: '3000 kcal',
-    steps: '2,000 steps',
-    focus: 'Fullbody',
+    steps: '2,000 pasos',
+    focus: 'Cuerpo Completo',
   },
   {
-    weekday: 'SUN',
+    weekday: 'DOM',
     day: 21,
     date: '2025-12-21',
     dayType: 'DAY C',
     dayTypeColor: 'bg-[#10B981]',
     calories: '2000 kcal',
-    steps: '1,000 steps',
-    focus: 'Chest',
+    steps: '1,000 pasos',
+    focus: 'Pecho',
   },
   {
-    weekday: 'MON',
+    weekday: 'LUN',
     day: 22,
     date: '2025-12-22',
     dayType: 'DAY A',
     dayTypeColor: 'bg-[#3B82F6]',
     calories: '3000 kcal',
-    steps: '1,000 steps',
-    focus: 'Back',
+    steps: '1,000 pasos',
+    focus: 'Espalda',
   },
   {
-    weekday: 'TUE',
+    weekday: 'MAR',
     day: 23,
     date: '2025-12-23',
     dayType: 'DAY B',
     dayTypeColor: 'bg-[#EF4444]',
     calories: '3000 kcal',
-    steps: '2,000 steps',
-    focus: 'Legs',
+    steps: '2,000 pasos',
+    focus: 'Piernas',
   },
   {
-    weekday: 'WED',
+    weekday: 'MIE',
     day: 24,
     date: '2025-12-24',
     dayType: 'DAY D',
     dayTypeColor: 'bg-[#FBBF24]',
     calories: '4000 kcal',
-    steps: '10,000 steps',
-    focus: 'Upper',
+    steps: '10,000 pasos',
+    focus: 'Superior',
   },
 ]);
 </script>

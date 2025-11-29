@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="px-4 pt-6 pb-3">
       <h1 class="text-center text-sm font-bold uppercase tracking-tight text-[#FFFFFF] mb-4">
-        CALENDAR
+        CALENDARIO
       </h1>
       <!-- Segmented Control + Actions -->
       <div class="flex items-center justify-between gap-3 mb-3">
@@ -12,22 +12,22 @@
             @click="$router.push({ name: 'calendar-day' })"
             class="flex-1 px-4 py-2 rounded-full text-xs font-medium text-[#5A5A5A] transition-all"
           >
-            Day
+            Día
           </button>
           <button
             @click="$router.push({ name: 'calendar-week' })"
             class="flex-1 px-4 py-2 rounded-full text-xs font-medium text-[#5A5A5A] transition-all"
           >
-            Week
+            Semana
           </button>
           <button
             class="flex-1 px-4 py-2 rounded-full text-xs font-medium bg-[#C7A64F] text-[#000000] shadow-[0_0_15px_rgba(199,166,79,0.4)]"
           >
-            Month
+            Mes
           </button>
         </div>
         <div class="flex items-center gap-2">
-          <button class="w-8 h-8 rounded-full bg-[#141414] border border-[#333333] flex items-center justify-center">
+          <button @click="$router.push({ name: 'calendar-edit' })" class="w-8 h-8 rounded-full bg-[#141414] border border-[#333333] flex items-center justify-center">
             <Edit2 class="w-4 h-4 text-[#C7A64F]" />
           </button>
           <button
@@ -35,13 +35,13 @@
             class="px-3 h-8 rounded-full bg-[#141414] border border-[#C7A64F] flex items-center gap-1.5"
           >
             <Info class="w-3.5 h-3.5 text-[#C7A64F]" />
-            <span class="text-[10px] text-[#C7A64F] font-medium">Types</span>
+            <span class="text-[10px] text-[#C7A64F] font-medium">Tipos</span>
           </button>
         </div>
       </div>
       <!-- Month Title -->
       <h2 class="text-center text-xl font-semibold text-[#FFFFFF] mb-3">
-        December 2025
+        Diciembre 2025
       </h2>
     </div>
     <!-- Legend Modal -->
@@ -60,7 +60,7 @@
               <div :class="['w-2.5 h-2.5 rounded-full', dayType.colorClass]"></div>
               <div class="flex-1">
                 <div class="text-xs font-semibold text-[#FFFFFF]">{{ dayType.name }}</div>
-                <div class="text-[10px] text-[#5A5A5A]">{{ dayType.calories }} kcal / {{ dayType.steps }} steps</div>
+                <div class="text-[10px] text-[#5A5A5A]">{{ dayType.calories }} kcal / {{ dayType.steps }} pasos</div>
               </div>
             </div>
           </div>
@@ -82,6 +82,7 @@
           :class="[
             'rounded-xl bg-[#141414] border border-[#333333] p-1.5 flex flex-col justify-between cursor-pointer transition-all hover:border-[#C7A64F] aspect-square',
             !day.isCurrentMonth && 'opacity-30',
+            day.isToday && 'border-[#C7A64F] bg-[#C7A64F]/10'
           ]"
         >
           <div class="text-xs font-semibold text-[#FFFFFF] text-center">{{ day.day }}</div>
@@ -102,19 +103,22 @@
       </div>
     </div>
     <!-- Floating Add Button -->
-    <button class="fixed bottom-24 right-6 w-14 h-14 rounded-full bg-[#C7A64F] shadow-[0_0_20px_rgba(199,166,79,0.5)] flex items-center justify-center">
-      <Plus class="w-6 h-6 text-[#000000]" />
-    </button>
+    <!-- Next Month Button -->
+    <div class="px-4 mt-4">
+      <button class="w-full py-3 rounded-xl bg-[#141414] border border-[#333333] text-[#5A5A5A] text-xs font-bold uppercase tracking-wider hover:text-white hover:border-[#C7A64F] transition-all">
+        Ver Siguiente Mes
+      </button>
+    </div>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Plus, Edit2, Info } from 'lucide-vue-next';
+import { Edit2, Info } from 'lucide-vue-next';
 import { Dumbbell, Activity, ListChecks, Sparkles } from 'lucide-vue-next';
 const router = useRouter();
 const showLegend = ref(false);
-const weekdays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+const weekdays = ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'];
 const dayTypes = [
   { name: 'DAY A', colorClass: 'bg-[#3B82F6]', calories: '3000', steps: '1,000' },
   { name: 'DAY B', colorClass: 'bg-[#EF4444]', calories: '3000', steps: '2,000' },
@@ -159,6 +163,7 @@ const generateCalendarDays = () => {
       isCurrentMonth: true,
       dayType: dayTypes[Math.floor(Math.random() * dayTypes.length)],
       workoutIcon: icons[Math.floor(Math.random() * icons.length)],
+      isToday: i === new Date().getDate() && new Date().getMonth() === 11 && new Date().getFullYear() === 2025,
     });
   }
   const remainingDays = 42 - days.length;
