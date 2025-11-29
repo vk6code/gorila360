@@ -124,9 +124,22 @@ import { GET_USER_CALENDAR_RANGE } from '@/graphql/calendar';
 const auth = useAuth();
 const userId = computed(() => auth.user?.id || 1);
 
-// Week Range: Dec 15 - Dec 21, 2025
-const startDate = '2025-12-15';
-const endDate = '2025-12-21';
+// Week Range: Current Week (Mon-Sun)
+const getWeekRange = () => {
+  const now = new Date();
+  const day = now.getDay(); // 0 (Sun) - 6 (Sat)
+  const diff = now.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+
+  const start = new Date(now.setDate(diff));
+  const end = new Date(now.setDate(start.getDate() + 6));
+
+  return {
+    start: start.toISOString().split('T')[0],
+    end: end.toISOString().split('T')[0]
+  };
+};
+
+const { start: startDate, end: endDate } = getWeekRange();
 
 const { result, loading } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
   userId: userId.value,

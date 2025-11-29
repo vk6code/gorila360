@@ -19,7 +19,7 @@
 
     <!-- Month Navigation (Placeholder for full 2025-2026 support) -->
     <div class="px-4 py-2 flex items-center justify-center gap-4">
-       <span class="text-white font-bold uppercase">Diciembre 2025</span>
+       <span class="text-white font-bold uppercase">{{ currentMonthLabel }}</span>
     </div>
 
     <!-- Calendar Grid -->
@@ -155,9 +155,26 @@ const getDayTypeColor = (code) => {
   return type ? type.colorClass : 'bg-[#5A5A5A]';
 };
 
-// --- 2. Calendar Data & Date Restrictions ---
-const startDate = '2025-12-01';
-const endDate = '2026-01-11';
+const currentMonthLabel = computed(() => {
+  return new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+});
+
+// Calendar Data: Dynamic Range (Start from beginning of current month or slightly before)
+const getCalendarRange = () => {
+  const now = new Date();
+  // Start from the 1st of the current month
+  const start = new Date(now.getFullYear(), now.getMonth(), 1);
+  // End 6 weeks later to fill grid
+  const end = new Date(start);
+  end.setDate(end.getDate() + 42);
+
+  return {
+    start: start.toISOString().split('T')[0],
+    end: end.toISOString().split('T')[0]
+  };
+};
+
+const { start: startDate, end: endDate } = getCalendarRange();
 
 // Only query if we have a user ID
 const { result, loading, refetch } = useQuery(GET_USER_CALENDAR_RANGE, () => ({
@@ -192,7 +209,7 @@ const calendarDays = computed(() => {
   return apiDays.map(d => ({
     day: new Date(d.date).getDate(),
     date: d.date,
-    isCurrentMonth: new Date(d.date).getMonth() === 11, // Dec 2025
+    isCurrentMonth: new Date(d.date).getMonth() === new Date().getMonth(),
     dayType: localUpdates.value[d.date] || d.dayType,
     isToday: d.isToday,
     isEditable: isDateEditable(d.date)
