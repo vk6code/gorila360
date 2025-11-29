@@ -248,6 +248,7 @@ const onDrop = (event, day) => {
 const touchDragItem = ref(null);
 const touchX = ref(0);
 const touchY = ref(0);
+const calendarGrid = ref(null);
 
 const onTouchStart = (event, type) => {
   touchDragItem.value = type;

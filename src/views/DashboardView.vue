@@ -89,7 +89,7 @@ const startWorkout = () => {
     <!-- Plan Your Week Section -->
     <section class="px-4 mb-8">
       <div
-        @click="$router.push({ name: 'student-calendar' })"
+        @click="$router.push({ name: 'calendar-week' })"
         class="relative overflow-hidden rounded-[16px] bg-surface border border-[#333] shadow-lg p-6 text-center h-64 flex flex-col justify-center items-center group cursor-pointer"
       >
         <!-- Background Image/Gradient -->
