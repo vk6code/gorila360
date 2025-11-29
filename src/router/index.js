@@ -21,6 +21,7 @@ import AdminUsersUserDetailView from '../views/UserDetail.vue'
 import StudentCalendarView from '../views/StudentCalendar.vue'
 import StudentCalendarWeekView from '../views/StudentCalendarWeek.vue'
 import StudentCalendarDayView from '../views/StudentCalendarDay.vue'
+import StudentCalendarEditView from '../views/StudentCalendarEdit.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -68,7 +69,7 @@ const routes = [
       {
         path: 'calendar/edit',
         name: 'calendar-edit',
-        component: () => import('../views/StudentCalendarEdit.vue')
+        component: StudentCalendarEditView
       }
     ]
   },

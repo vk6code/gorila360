@@ -200,7 +200,9 @@ console.log('StudentCalendarDay mounted. Auth User:', auth.user.value);
 console.log('Route Params:', route.params);
 
 const currentDate = computed(() => {
-  return route.params.date ? new Date(route.params.date) : new Date();
+  if (!route.params.date) return new Date();
+  const d = new Date(route.params.date);
+  return isNaN(d.getTime()) ? new Date() : d;
 });
 
 const formattedDate = computed(() => {
